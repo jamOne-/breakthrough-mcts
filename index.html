@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Breakthrough</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+
+        <link rel="stylesheet" href="./styles/material.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="./styles/styles.css">
+
+        <script src="./js/material.min.js"></script>
+        <script src="./js/material_select.js"></script>
+        <script src="./js/require.js" data-main="./js/main.js"></script>
+    </head>
+    <body>
+        <div class="mdl-layout mdl-js-layout mdl-layout--no-desktop-drawer-button mdl-layout--fixed-header">
+        <header id="header" class="mdl-layout__header mdl-layout__header--scroll">
+            <div class="mdl-layout__header-row">
+            <span class="mdl-layout-title">Breakthrough</span>
+            <div class="mdl-layout-spacer"></div>
+            <nav class="mdl-navigation mdl-layout--large-screen-only">
+                <a class="mdl-navigation__link" href="">Game</a>
+                <a class="mdl-navigation__link" href="">About project</a>
+                <a class="mdl-navigation__link" href="">About me</a>
+            </nav>
+            </div>
+        </header>
+        <div class="mdl-layout__drawer">
+            <span class="mdl-layout-title">Breakthrough</span>
+            <nav class="mdl-navigation">
+                <a class="mdl-navigation__link" href="">Game</a>
+                <a class="mdl-navigation__link" href="">About project</a>
+                <a class="mdl-navigation__link" href="">About me</a>
+            </nav>
+        </div>
+        <main class="mdl-layout__content">
+            <div id="loading" style="z-index: 2; position: absolute; top: 0; left: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: calc(100vh - 64px); background-color: white;">
+                <h4>Loading...</h4>
+                <div style="width: 60%" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+            </div>
+            <div id="content-container" class="noselect hidden" style="display: flex; flex-wrap: wrap; justify-content: center;">
+                <canvas id="game-canvas" style="flex-grow: 0"></canvas>
+                <div style="flex-grow: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                    <h3 style="margin-top: 50px">Game settings</h3><br>
+                    
+                    <div style="display: flex; flex-wrap: wrap; justify-content: space-around; width: 100%;">
+                        <div class="mdl-select mdl-js-select">
+                            <label class="mdl-input_label" for="player-white">White player</label>
+                            <select class="mdl-select__input" id="player-white">
+                                <option value="human" selected>Human</option>
+                                <option value="random">Random AI</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mdl-select mdl-js-select">
+                            <label class="mdl-input_label" for="player-black">Black player</label>
+                            <select class="mdl-select__input" id="player-black">
+                                <option value="human">Human</option>
+                                <option value="random" selected>Random AI</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <button id="button-new-game" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect" style="width: 60%; margin: 20px 0;">New game</button>
+                </div>
+            </div>
+
+            <footer class="mdl-mini-footer">
+                <div class="mdl-mini-footer__left-section">
+                    <div class="mdl-logo">
+                    More Information
+                    </div>
+                    <ul class="mdl-mini-footer__link-list">
+                    <li><a href="#">Help</a></li>
+                    <li><a href="#">Privacy and Terms</a></li>
+                    <li><a href="#">User Agreement</a></li>
+                    </ul>
+                </div>
+                <div class="mdl-mini-footer__right-section">
+                    <button class="mdl-mini-footer__social-btn"></button>
+                    <button class="mdl-mini-footer__social-btn"></button>
+                    <button class="mdl-mini-footer__social-btn"></button>
+                </div>
+            </footer>
+        </main>
+        </div>
+    </body>
+</html>
