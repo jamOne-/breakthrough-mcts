@@ -54,11 +54,11 @@ class Main {
         
         context.clearRect(0, 0, Main._canvas.width, Main._canvas.height);
         drawBoard();
-        Main._game.board.forEach(row => row.forEach(pawn => pawn && drawPawn(pawn)));
+        Main._game.board.board.forEach(row => row.forEach(pawn => pawn && drawPawn(pawn)));
         Main._game.players.forEach(player =>
             player.selectedPawn &&
             (drawSelection(player.selectedPawn.position) ||
-            Main._game.getPossibleMovesOfAPawn(player.selectedPawn).forEach(drawSelection))
+            Main._game.board.getPossibleMovesOfAPawn(player.selectedPawn).forEach(drawSelection))
         );
     }
     

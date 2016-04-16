@@ -9,9 +9,9 @@
         <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
         <link rel="stylesheet" href="./styles/styles.css">
 
-        <script src="./js/material.min.js"></script>
-        <script src="./js/material_select.js"></script>
-        <script src="./js/require.js" data-main="./js/main.js"></script>
+        <script src="./js/dependencies/material.min.js"></script>
+        <script src="./js/dependencies/material_select.js"></script>
+        <script src="./js/dependencies/require.js" data-main="./js/generated/main.js"></script>
     </head>
     <body>
         <div class="mdl-layout mdl-js-layout mdl-layout--no-desktop-drawer-button mdl-layout--fixed-header">
@@ -50,6 +50,7 @@
                             <select class="mdl-select__input" id="player-white">
                                 <option value="human" selected>Human</option>
                                 <option value="random">Random AI</option>
+                                <option value="minmax">MinMax AI</option>
                             </select>
                         </div>
                         
@@ -58,6 +59,7 @@
                             <select class="mdl-select__input" id="player-black">
                                 <option value="human">Human</option>
                                 <option value="random" selected>Random AI</option>
+                                <option value="minmax">MinMax AI</option>                                
                             </select>
                         </div>
                     </div>
