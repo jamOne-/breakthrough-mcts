@@ -48,7 +48,7 @@ export class Game {
 
         if (end == -1) {
             this.board.nextTurn();
-            this.players[this.board.turn].move();
+            setTimeout(() => this.players[this.board.turn].move(), 100);
             return;
         }
 
