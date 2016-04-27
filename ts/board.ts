@@ -111,10 +111,10 @@ export class Board {
         let enemySortedDistances = enemyPawns.map(p => pawnDistance(p)).sort((a, b) => b - a);
         
         let i = 1;
-        let myValue = mySortedDistances.reduce((val, a) => { i /= 2; return val + a * i; });
+        let myValue = mySortedDistances.reduce((val, a) => { i /= 2; return val + a * i; }) + myPawns.length;
         
-        i = 1;
-        let enemyValue = enemySortedDistances.reduce((val, a) => { i /= 2; return val + a * i; });
+        i = 1
+        let enemyValue = enemySortedDistances.reduce((val, a) => { i /= 2; return val + a * i; }) + enemyPawns.length;
         
         return myValue - enemyValue;
     }
