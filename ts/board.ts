@@ -34,6 +34,8 @@ export class Board {
     }
     
     public checkEnd() {
+        if (!this.board.some(row => row.some(p => p && p.color === 1))) return 0;
+        if (!this.board.some(row => row.some(p => p && p.color === 0))) return 1;
         if (this.board[0].some(p => p && p.color === 0)) return 0;
         if (this.board[this.boardSize - 1].some(p => p && p.color === 1)) return 1;
         return -1;
