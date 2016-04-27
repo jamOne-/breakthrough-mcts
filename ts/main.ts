@@ -65,6 +65,8 @@ class Main {
     private static _createGame() {
         let white = (<HTMLSelectElement>document.getElementById('player-white')).value;
         let black = (<HTMLSelectElement>document.getElementById('player-black')).value;
+        
+        if (Main._game) Main._game.stop();
         Main._game = new Game(8, white, black);
         Main._game.addDrawListener(Main.draw);
         Main._game.run();

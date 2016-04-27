@@ -37,12 +37,20 @@ export class Game {
         ];
     }
     
+    public stop() {
+        this._clickListeners = [];
+        this._drawListeners = [];
+        this.gameState = GameState.END;
+    }
+    
     public run() {
         this.callDrawListeners();
         this.players[0].move();
     }
 
     public moved() {
+        if (this.gameState == GameState.END) return;
+        
         console.log(this.board.calculateValue());
         this.callDrawListeners();
         let end = this.board.checkEnd();
