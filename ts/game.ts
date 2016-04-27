@@ -1,4 +1,5 @@
-import {Player, PlayerFactory} from './player';
+import {Player} from './player';
+import {PlayerFactory} from './player-factory';
 import {Pawn} from './pawn';
 import {Point} from './point';
 import {Board} from './board';
