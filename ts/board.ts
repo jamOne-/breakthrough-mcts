@@ -42,12 +42,12 @@ export class Board {
     }
     
     public nextTurn() {
-        this.turn = (this.turn + 1) & 1;
+        this.turn ^= 1;
         this.turnNumber++;
     }
     
     public previousTurn() {
-        this.turn = (this.turn + 1) & 1;
+        this.turn ^= 1;
         this.turnNumber--;
     }
     
@@ -77,6 +77,14 @@ export class Board {
         return possibleMoves;
     }
     
+    public getPossibleMovesOfPawns(color : number) : { pawn : Pawn, point : Point }[] {
+        if (this.checkEnd() != -1) return [];
+        
+        return Array.prototype.concat.apply([], this.getPawns(color).map(p => {
+            return this.getPossibleMovesOfAPawn(p).map(point => { return { pawn: p, point }; })
+        }));
+    }
+    
     public movePawn(pawn : Pawn, position : Point) {
         this.board[pawn.position.y][pawn.position.x] = undefined;
         pawn.position = position;
@@ -85,37 +93,5 @@ export class Board {
     
     public getPawn(position : Point) {
         return this.board[position.y][position.x];
-    }
-    
-    public calculateValue() {
-        let pawnDistance = (pawn : Pawn) => {
-            if (pawn.color) return pawn.position.y + 1;
-            return this.boardSize - pawn.position.y;
-        }
-        
-        let playerColor = this.turn;
-        
-        let enemyColor = ((playerColor + 1)) & 1;
-        let endingPosition = this.checkEnd();
-        
-        if (endingPosition === playerColor) return 9999999 - this.turnNumber;
-        else if (endingPosition === enemyColor) return -9999999 + this.turnNumber;
-        
-        let myPawns = this.getPawns(playerColor);
-        let enemyPawns = this.getPawns(enemyColor);
-        
-        // let myValue = myPawns.reduce((max, pawn) => Math.max(max, pawnDistance(pawn)), 0) + myPawns.length;
-        // let enemyValue = enemyPawns.reduce((max, pawn) => Math.max(max, pawnDistance(pawn)), 0) + enemyPawns.length;
-        
-        let mySortedDistances = myPawns.map(p => pawnDistance(p)).sort((a, b) => b - a);
-        let enemySortedDistances = enemyPawns.map(p => pawnDistance(p)).sort((a, b) => b - a);
-        
-        let i = 1;
-        let myValue = mySortedDistances.reduce((val, a) => { i /= 2; return val + a * i; }) + myPawns.length;
-        
-        i = 1
-        let enemyValue = enemySortedDistances.reduce((val, a) => { i /= 2; return val + a * i; }) + enemyPawns.length;
-        
-        return myValue - enemyValue;
     }
 }

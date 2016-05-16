@@ -69,6 +69,7 @@ class Main {
         if (Main._game) Main._game.stop();
         Main._game = new Game(8, white, black);
         Main._game.addDrawListener(Main.draw);
+        Main._game.addEndListener((winner) => { debugger; console.info(winner + ' wygral'); });
         Main._game.run();
     }
     
@@ -80,7 +81,7 @@ class Main {
         let y = (ev.clientY - Main._canvas.getBoundingClientRect().top) / squareSize;
         x = Math.floor(x);
         y = Math.floor(y);
-        Main._game.handleClick({ x, y });
+        Main._game.callClickListeners({ x, y });
     }
     
     private static _calcSquareSize() {

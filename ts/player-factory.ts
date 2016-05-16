@@ -1,6 +1,7 @@
 import {MinMaxPlayer, valueFunction, valueFunction2, valueFunction3} from './player-minmax';
 import {HumanPlayer} from './player-human';
 import {RandomPlayer} from './player-random';
+import {MCTSPlayer} from './player-mcts';
 import {Board} from './board';
 
 export class PlayerFactory {
@@ -13,6 +14,9 @@ export class PlayerFactory {
         switch (type) {
             case 'random':
                 return new RandomPlayer(board, color, onMove);
+                
+            case 'mcts':
+                return new MCTSPlayer(board, color, onMove);
                 
             case 'minmax1':
                 return new MinMaxPlayer(board, color, onMove, valueFunction);

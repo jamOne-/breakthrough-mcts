@@ -12,6 +12,7 @@ enum GameState {
 export class Game {
     private _clickListeners : ((position : Point) => any)[];
     private _drawListeners : (() => void)[];
+    private _endListeners: ((winner : number) => void)[];
 
     public players : Player[];
     public gameState : GameState;
@@ -26,6 +27,7 @@ export class Game {
     public restart(boardSize : number, player1Type: string, player2Type : string) {
         this._clickListeners = [];
         this._drawListeners = [];
+        this._endListeners = [];
         this.gameState = GameState.RUNNING;
 
         this.board = new Board(boardSize);
@@ -51,33 +53,41 @@ export class Game {
     public moved() {
         if (this.gameState == GameState.END) return;
         
-        console.log(this.board.calculateValue());
         this.callDrawListeners();
         let end = this.board.checkEnd();
 
         if (end == -1) {
             this.board.nextTurn();
-            setTimeout(() => this.players[this.board.turn].move(), 100);
+            this.players[this.board.turn].move();
+            // setTimeout(() => this.players[this.board.turn].move(), 0);
             return;
         }
 
-        console.info(end + ' wygral');
         this.gameState = GameState.END;
+        this.callEndListeners(end);
     }
 
-    public addClickListener(f : ((position : Point) => any)) {
+    public addClickListener(f : (position : Point) => any) {
         this._clickListeners.push(f);
     }
     
-    public addDrawListener(f : (() => void)) {
-        this._drawListeners.push(f);
-    }
-
-    public handleClick(position : Point) {
+    public callClickListeners(position : Point) {
         this._clickListeners.forEach(f => f(position));
+    }
+    
+    public addDrawListener(f : () => void) {
+        this._drawListeners.push(f);
     }
     
     public callDrawListeners() {
         this._drawListeners.forEach(f => f());
+    }
+    
+    public addEndListener(f : (winner : number) => void) {
+        this._endListeners.push(f);
+    }
+    
+    public callEndListeners(winner : number) {
+        this._endListeners.forEach(f => f(winner));
     }
 }
