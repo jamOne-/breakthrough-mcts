@@ -5,8 +5,15 @@ export class Board {
     public board : Pawn[][];
     public turn : number;
     public turnNumber : number;
+    // public undoQueue : {
+    //         movedPawn: Pawn,
+    //         previousPosition: Point,
+    //         previousPawn: Pawn
+    // }[];
     
-    public constructor(public boardSize : number) {}
+    public constructor(public boardSize : number) {
+        // this.undoQueue = [];
+    }
     
     public initBoard() {
         this.turn = 0;
@@ -86,6 +93,12 @@ export class Board {
     }
     
     public movePawn(pawn : Pawn, position : Point) {
+        // this.undoQueue.push({
+        //     movedPawn: pawn,
+        //     previousPosition: JSON.parse(JSON.stringify(pawn.position)),
+        //     previousPawn: this.getPawn(position)
+        // });
+        
         this.board[pawn.position.y][pawn.position.x] = undefined;
         pawn.position = position;
         this.board[position.y][position.x] = pawn;

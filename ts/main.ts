@@ -67,9 +67,9 @@ class Main {
         let black = (<HTMLSelectElement>document.getElementById('player-black')).value;
         
         if (Main._game) Main._game.stop();
-        Main._game = new Game(8, white, black);
+        Main._game = new Game(8, true, white, black);
         Main._game.addDrawListener(Main.draw);
-        Main._game.addEndListener((winner) => { debugger; console.info(winner + ' wygral'); });
+        Main._game.addEndListener((winner) => console.info(winner + ' wygral'));
         Main._game.run();
     }
     

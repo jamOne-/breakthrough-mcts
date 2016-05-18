@@ -19,12 +19,13 @@ export class Game {
     public board : Board;
 
     public constructor(public boardSize : number,
+                    public async : boolean,
                     player1Type : string,
                     player2Type : string) {
         this.restart.apply(this, arguments);
     }
 
-    public restart(boardSize : number, player1Type: string, player2Type : string) {
+    public restart(boardSize : number, async : boolean, player1Type: string, player2Type : string) {
         this._clickListeners = [];
         this._drawListeners = [];
         this._endListeners = [];
@@ -58,8 +59,8 @@ export class Game {
 
         if (end == -1) {
             this.board.nextTurn();
-            this.players[this.board.turn].move();
-            // setTimeout(() => this.players[this.board.turn].move(), 0);
+            if (this.async) setTimeout(() => this.players[this.board.turn].move(), 0);
+            else this.players[this.board.turn].move();
             return;
         }
 
