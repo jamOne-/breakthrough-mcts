@@ -16,6 +16,7 @@ class TreeNode {
 }
 
 let aggressiveness = 1.0;
+let thinkingTime = 10000;
 let cp = Math.SQRT1_2;
 let root : TreeNode = null;
 let color : number = null;
@@ -60,7 +61,7 @@ let UCTSearch = () => {
         if (now - start > 500)
             return setTimeout(UCTSearch.bind(this), 0);
             
-        if (requestTime && now - requestTime > 60000)
+        if (requestTime && now - requestTime > thinkingTime)
             moveBest();
 
         let v = treePolicy(root);

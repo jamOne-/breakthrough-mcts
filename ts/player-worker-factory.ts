@@ -1,6 +1,7 @@
 import * as MCTSWorker from 'worker-loader?name=./js/generated/player-mcts-worker.js!./player-mcts-worker';
 import * as HumanWorker from 'worker-loader?name=./js/generated/player-human-worker.js!./player-human-worker';
 import * as RandomWorker from 'worker-loader?name=./js/generated/player-random-worker.js!./player-random-worker';
+import * as MinMaxWorker from 'worker-loader?name=./js/generated/player-minmax-worker.js!./player-minmax-worker';
 
 export let getWorker = (type : string) => {
     switch (type) {
@@ -12,5 +13,12 @@ export let getWorker = (type : string) => {
             
         case 'human':
             return (new HumanWorker() as Worker);
+            
+        case 'minmax 1':
+        case 'minmax 2':
+        case 'minmax 3':
+            let worker = (new MinMaxWorker() as Worker);
+            worker.postMessage({ type: 'value function', functionNumber: type.split(' ')[1] });
+            return worker;
     }
 }

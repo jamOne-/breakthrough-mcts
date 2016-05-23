@@ -12,3 +12,8 @@ declare module "worker-loader?name=./js/generated/player-random-worker.js!./play
     let w : () => void;
     export = w;
 }
+
+declare module "worker-loader?name=./js/generated/player-minmax-worker.js!./player-minmax-worker" {
+    let w : () => void;
+    export = w;
+}
