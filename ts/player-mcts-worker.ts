@@ -41,8 +41,6 @@ onmessage = (ev : MessageEvent) => {
             break;
             
         case 'moved':
-            if (!board.getPawn(ev.data.positionBefore))
-                debugger;
             board.movePawn(board.getPawn(ev.data.positionBefore), ev.data.positionAfter);
             moveRoot();
             break;
@@ -144,7 +142,6 @@ let doSomeRandomMoves = (turn : number) : number => {
     
     if (!move)  // todo ??????????????????????
         debugger;
-        //return board.turn;
     
     let previousPawn = board.getPawn(move.point);
     let previousPosition : Point = JSON.parse(JSON.stringify(move.pawn.position));
@@ -200,10 +197,10 @@ let moveBest = () => {
     
     requestTime = 0;  
     (postMessage as any)({
-            positionBefore: move.pawn.position,
-            positionAfter: move.point
-        }
-    );
+        type: 'move',
+        positionBefore: move.pawn.position,
+        positionAfter: move.point
+    });
     
     board.movePawn(move.pawn, move.point);
 }

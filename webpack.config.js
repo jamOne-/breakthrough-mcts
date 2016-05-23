@@ -3,12 +3,6 @@ module.exports = {
   output: {
     filename: './js/generated/bundle.js'
   },
-  worker: {
-    output: {
-      filename: './js/generated/[name].worker.js',
-      chunkFilename: './js/generated/[name].worker.js'
-    }
-  },
   devtool: 'source-map',
   resolve: {
     extensions: ['', '.webpack.js', '.web.js', '.ts', '.js']

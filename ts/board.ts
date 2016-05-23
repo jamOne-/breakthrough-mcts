@@ -3,11 +3,12 @@ import {Point} from './point';
 import {Stack} from './stack';
 
 export class Board {
+    private _pawns : Pawn[][];
+        
     public board : Pawn[][];
     public turn : number;
     public turnNumber : number;
     public undoStack : Stack<UndoHistory>;
-    public pawns : Pawn[][];    
     
     public constructor(public boardSize : number) {}
     
@@ -15,7 +16,7 @@ export class Board {
         this.turn = 0;
         this.turnNumber = 0;
         this.undoStack = new Stack<UndoHistory>();
-        this.pawns = [[], []];
+        this._pawns = [[], []];
         
         this.board = new Array(this.boardSize);
         for (let i = 0; i < this.boardSize; i++)
@@ -25,30 +26,20 @@ export class Board {
             for (let x = 0; x < this.boardSize; x++) {
                 let pawn = new Pawn({ x, y }, 1);
                 this.board[y][x] = pawn;
-                this.pawns[1].push(pawn);
+                this._pawns[1].push(pawn);
             }
                 
         for (let y = this.boardSize - 2; y < this.boardSize; y++)
             for (let x = 0; x < this.boardSize; x++) {
                 let pawn = new Pawn({ x, y }, 0);
                 this.board[y][x] = pawn;
-                this.pawns[0].push(pawn);
+                this._pawns[0].push(pawn);
             }
     }
     
-    // public copyBoard() {
-    //     let board = new Board(this.boardSize);
-    //     board.turn = this.turn;
-    //     board.board = JSON.parse(JSON.stringify(this.board));
-        
-    //     return board;
-    // }
-    
     public checkEnd() {
-        if (!this.pawns[1].length) return 0;
-        if (!this.pawns[0].length) return 1;
-        // if (!this.board.some(row => row.some(p => p && p.color === 1))) return 0;
-        // if (!this.board.some(row => row.some(p => p && p.color === 0))) return 1;
+        if (!this._pawns[1].length) return 0;
+        if (!this._pawns[0].length) return 1;
         if (this.board[0].some(p => p && p.color === 0)) return 0;
         if (this.board[this.boardSize - 1].some(p => p && p.color === 1)) return 1;
         return -1;
@@ -65,11 +56,7 @@ export class Board {
     }
     
     public getPawns(color : number) {
-        return this.pawns[color];
-        // return this.board.reduce(
-        //         (ret, row) =>
-        //             ret.concat(
-        //                 row.filter(pawn => pawn && pawn.color === color)), []);
+        return this._pawns[color];
     }
 
     public getPossibleMovesOfAPawn(pawn : Pawn) {
@@ -94,7 +81,7 @@ export class Board {
     public getPossibleMovesOfPawns(color : number) : { pawn : Pawn, point : Point }[] {
         if (this.checkEnd() != -1) return [];
         
-        return Array.prototype.concat.apply([], this.pawns[color].map(p => {
+        return Array.prototype.concat.apply([], this._pawns[color].map(p => {
             return this.getPossibleMovesOfAPawn(p).map(point => { return { pawn: p, point }; })
         }));
     }
@@ -107,7 +94,7 @@ export class Board {
             previousPawn: previousPawn
         });
         
-        if (previousPawn) this.pawns[previousPawn.color].splice(this.pawns[previousPawn.color].indexOf(previousPawn), 1);
+        if (previousPawn) this._pawns[previousPawn.color].splice(this._pawns[previousPawn.color].indexOf(previousPawn), 1);
         
         this.board[pawn.position.y][pawn.position.x] = undefined;
         pawn.position = point;
@@ -117,13 +104,8 @@ export class Board {
     }
     
     public undoMove() {
-        if (this.undoStack.isEmpty()) {
-            console.log('cant undo, stack is empty!');
-            return;
-        }
-        
         let move = this.undoStack.pop();
-        if (move.previousPawn) this.pawns[move.previousPawn.color].push(move.previousPawn);
+        if (move.previousPawn) this._pawns[move.previousPawn.color].push(move.previousPawn);
         this.board[move.movedPawn.position.y][move.movedPawn.position.x] = move.previousPawn;        
         move.movedPawn.position = move.previousPosition;
         this.board[move.previousPosition.y][move.previousPosition.x] = move.movedPawn;

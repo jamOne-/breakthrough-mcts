@@ -1,5 +1,3 @@
-import {Player} from './player';
-import {PlayerFactory} from './player-factory';
 import {Pawn} from './pawn';
 import {Point} from './point';
 import {Board} from './board';
@@ -11,12 +9,11 @@ enum GameState {
 }
 
 export class Game {
-    private _clickListeners : ((position : Point) => any)[];
     private _drawListeners : (() => void)[];
     private _endListeners: ((winner : number) => void)[];
+    private _workers : Worker[];
 
-    public mctsWorker : Worker;
-    public players : Player[];
+    public selectedPawn : Pawn;
     public gameState : GameState;
     public board : Board;
 
@@ -27,43 +24,52 @@ export class Game {
     }
 
     public restart(boardSize : number, player1Type: string, player2Type : string) {
-        this._clickListeners = [];
         this._drawListeners = [];
         this._endListeners = [];
         this.gameState = GameState.RUNNING;
+        this.selectedPawn = null;
 
         this.board = new Board(boardSize);
         this.board.initBoard();
-
-        this.players = [
-            PlayerFactory.create(player1Type, this.board, 0, this.moved.bind(this), this.addClickListener.bind(this), this.callDrawListeners.bind(this)),
-            // PlayerFactory.create(player2Type, this.board, 1, this.moved.bind(this), this.addClickListener.bind(this), this.callDrawListeners.bind(this))
+        
+        this._workers = [
+            getWorker(player1Type),
+            getWorker(player2Type)
         ];
         
-        this.mctsWorker = getWorker('mcts');
-        this.mctsWorker.postMessage({ type: 'asdf' });
-        
-        this.mctsWorker.postMessage({
-            type: 'color',
-            color: 1
+        this._workers.forEach((worker, color) => { 
+            worker.postMessage({ type: 'color', color: color });
+            worker.onmessage = this._handleWorkerMessage.bind(this, color);
         });
-        
-        this.mctsWorker.onmessage = (ev : MessageEvent) => {
-            this.board.movePawn(this.board.getPawn(ev.data.positionBefore), ev.data.positionAfter);
-            this.moved();
+    }
+    
+    private _handleWorkerMessage(color : number, ev : MessageEvent) {
+        switch (ev.data.type) {
+            case 'move':
+                this.board.movePawn(this.board.getPawn(ev.data.positionBefore), ev.data.positionAfter);
+                this.selectedPawn = null;
+                this.moved();
+                break;
+                
+            case 'select':
+                this.selectedPawn = ev.data.point && this.board.getPawn(ev.data.point) || null;
+                this.callDrawListeners();
+                break;
+            
+            default:
+                break;
         }
     }
     
     public stop() {
-        this._clickListeners = [];
         this._drawListeners = [];
         this.gameState = GameState.END;
-        this.mctsWorker.terminate();
+        this._workers.forEach(worker => worker.terminate());
     }
     
     public run() {
         this.callDrawListeners();
-        this.players[0].move();
+        this._workers[0].postMessage({ type: 'move' });
     }
 
     public moved() {
@@ -73,35 +79,25 @@ export class Game {
         let end = this.board.checkEnd();
 
         if (end == -1) {
-            if (this.board.turn) {
-                let lastMove = this.board.undoStack.peek();
-                
-                this.mctsWorker.postMessage({
-                    type: 'moved',
-                    positionBefore: lastMove.previousPosition,
-                    positionAfter: lastMove.movedPawn.position
-                });  
-                
-                this.mctsWorker.postMessage({ type: 'move' });
-            }
+            let lastMove = this.board.undoStack.peek();
+            let currentWorker = this._workers[this.board.turn];
             
-            else
-                setTimeout(() => this.players[this.board.turn].move(), 0);
-                // this.players[this.board.turn].move();
+            currentWorker.postMessage({
+                type: 'moved',
+                positionBefore: lastMove.previousPosition,
+                positionAfter: lastMove.movedPawn.position
+            });
+            
+            currentWorker.postMessage({ type: 'move' });
             return;
         }
 
         this.gameState = GameState.END;
-        this.mctsWorker.postMessage({ type: 'stop' });
         this.callEndListeners(end);
     }
-
-    public addClickListener(f : (position : Point) => any) {
-        this._clickListeners.push(f);
-    }
     
-    public callClickListeners(position : Point) {
-        this._clickListeners.forEach(f => f(position));
+    public callClickListeners(point : Point) {
+        this._workers.forEach(worker => worker.postMessage({ type: 'click', point: point }));
     }
     
     public addDrawListener(f : () => void) {

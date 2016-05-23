@@ -56,11 +56,17 @@ class Main {
         context.clearRect(0, 0, Main._canvas.width, Main._canvas.height);
         drawBoard();
         Main._game.board.board.forEach(row => row.forEach(pawn => pawn && drawPawn(pawn)));
-        Main._game.players.forEach(player =>
-            player.selectedPawn &&
-            (drawSelection(player.selectedPawn.position) ||
-            Main._game.board.getPossibleMovesOfAPawn(player.selectedPawn).forEach(drawSelection))
-        );
+        
+        if (Main._game.selectedPawn) {
+            drawSelection(Main._game.selectedPawn.position);
+            Main._game.board.getPossibleMovesOfAPawn(Main._game.selectedPawn).forEach(drawSelection);
+        }
+        
+        if (!Main._game.board.undoStack.isEmpty()) {
+            let lastMove = Main._game.board.undoStack.peek();
+            drawSelection(lastMove.movedPawn.position);
+            drawSelection(lastMove.previousPosition);
+        }
     }
     
     private static _createGame() {
