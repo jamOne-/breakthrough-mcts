@@ -5,17 +5,22 @@ Opracowywanie agenta grającego w grę Breakthrough wykorzystującego algorytm M
 
 Strona projektu: https://dominiks.site
 
-### TypeScript
+### Uruchomienie projektu
 
-Praca w znacznej części pisana jest w języku TypeScript, który jest następnie transkompilowany do języka JavaScript.
-
-Aby samemu wykonać transkompilację należy mieć zainstalowanego Node.js. Następnie trzeba zainstalować paczkę TypeScript poleceniem:
+Do uruchomienia projektu potrzebny jest Node.js.
+Będąc w katalogu projektu instalujemy zależności projektu poleceniem:
 ```sh
-$ npm install -g tsc
+$ npm install
 ```
 
-Wtedy będąc w katalogu projektu wpisać:
+Później będąc w katalogu projektu wpisujemy:
 ```sh
-$ tsc
-# ewentualnie tsc -w, jeżeli interesuje nas tsc w trybie watcher
+$ webpack
+# ewentualnie webpack -w, jeżeli interesuje nas tryb watcher
 ```
+
+Dodatkowo aplikację do poprawnego działania trzeba jakoś serwować.
+Na przykład dzięki lite-server (znajdującego się w zależnościach):
+```sh
+$ lite-server
+``` 
