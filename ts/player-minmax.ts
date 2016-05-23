@@ -40,16 +40,13 @@ export class MinMaxPlayer extends Player {
                 let value = 0;
                 
                 this.board.movePawn(pawn, move);
-                this.board.nextTurn();
                 
                 if (this.board.checkEnd() === -1)
                     value = - this._negamax(depth - 1, -b, -a)[0].value;
                 else
                     value = 9999999 - this.board.turnNumber;
                             
-                this.board.previousTurn();
-                this.board.movePawn(pawn, previousPosition);
-                if (previousPawn) this.board.movePawn(previousPawn, previousPawn.position);
+                this.board.undoMove();
                 
                 if (value === maxMoves[0].value)
                     maxMoves.push({ move, pawn, value });
