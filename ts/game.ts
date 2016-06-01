@@ -38,7 +38,8 @@ export class Game {
         ];
         
         this._workers.forEach((worker, color) => { 
-            worker.postMessage({ type: 'color', color: color });
+            worker.postMessage({ type: 'start' });
+            setTimeout(() => worker.postMessage({ type: 'color', color: color }), 1000);
             worker.onmessage = this._handleWorkerMessage.bind(this, color);
         });
     }
@@ -69,7 +70,7 @@ export class Game {
     
     public run() {
         this.callDrawListeners();
-        this._workers[0].postMessage({ type: 'move' });
+        setTimeout(() => this._workers[0].postMessage({ type: 'move' }), 2000);
     }
 
     public moved() {

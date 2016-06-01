@@ -38,6 +38,9 @@ onmessage = (ev : MessageEvent) => {
                 case '3':
                     valueFunction = _valueFunction3;
                     break;
+                    
+                case '4':
+                    valueFunction = _valueFunction4;
             }
             break;
             
@@ -171,6 +174,35 @@ let _valueFunction3 = (board : Board) => {
     let enemyPawns = board.getPawns(enemyColor);
     let myValue = myPawns.reduce((val, pawn) => val * pawnDistance(pawn), 1);
     let enemyValue = enemyPawns.reduce((val, pawn) => val * pawnDistance(pawn), 1);
+    
+    return myValue - enemyValue;
+}
+
+let _valueFunction4 = (board : Board) => {
+    let pawnDistance = (pawn : Pawn) => {
+        if (pawn.color) return pawn.position.y + 1;
+        return board.boardSize - pawn.position.y;
+    }
+    
+    let playerColor = board.turn;
+    
+    let enemyColor = playerColor ^ 1;
+    let endingPosition = board.checkEnd();
+    
+    if (endingPosition === playerColor) return 9999999 - board.turnNumber;
+    else if (endingPosition === enemyColor) return -9999999 + board.turnNumber;
+    
+    let myPawns = board.getPawns(playerColor);
+    let enemyPawns = board.getPawns(enemyColor);
+    
+    let mySortedDistances = myPawns.map(p => pawnDistance(p)).sort((a, b) => b - a);
+    let enemySortedDistances = enemyPawns.map(p => pawnDistance(p)).sort((a, b) => b - a);
+    
+    let i = 1;
+    let myValue = mySortedDistances.reduce((val, a) => { i /= 2; return val + a * i; });// + 3 * myPawns.length;
+    
+    i = 1
+    let enemyValue = enemySortedDistances.reduce((val, a) => { i /= 2; return val + a * i; });// + 3 * enemyPawns.length;
     
     return myValue - enemyValue;
 }

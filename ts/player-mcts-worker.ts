@@ -140,13 +140,6 @@ let doSomeRandomMoves = (turn : number) : number => {
     }
     
     let move = moves[~~(Math.random() * moves.length)];
-    
-    if (!move)  // todo ??????????????????????
-        debugger;
-    
-    let previousPawn = board.getPawn(move.point);
-    let previousPosition : Point = JSON.parse(JSON.stringify(move.pawn.position));
-    
     board.movePawn(move.pawn, move.point);
     
     let result = doSomeRandomMoves(turn);

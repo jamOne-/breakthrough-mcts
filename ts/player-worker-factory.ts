@@ -7,6 +7,9 @@ export let getWorker = (type : string) => {
     switch (type) {
         case 'mcts':
             return (new MCTSWorker() as Worker);
+            
+        case 'mcts asmjs':
+            return new Worker('/js/generated/player-mcts-asmjs-worker.js');
         
         case 'random':
             return (new RandomWorker() as Worker);
@@ -17,6 +20,7 @@ export let getWorker = (type : string) => {
         case 'minmax 1':
         case 'minmax 2':
         case 'minmax 3':
+        case 'minmax 4':
             let worker = (new MinMaxWorker() as Worker);
             worker.postMessage({ type: 'value function', functionNumber: type.split(' ')[1] });
             return worker;
