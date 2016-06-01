@@ -126,11 +126,8 @@ void UCT_search() {
 	
 	while (working) {
 		if (now - start > 500)
-			// return EM_ASM(setTimeout(Module.cwrap('UCT_search'), 0));
 			return emscripten_async_call(UCT_search_packed, NULL, 0);
-			
-		if (board.turn != color && root->n > 30000)
-			return emscripten_async_call(UCT_search_packed, NULL, 500);
+			// return EM_ASM(setTimeout(Module.cwrap('UCT_search'), 0));
 
 		if (request_time && now - request_time > thinking_time)
 			move_best();
