@@ -1,7 +1,7 @@
 import {Pawn} from './pawn';
 import {Point} from './point';
 import {Board} from './board';
-import {getWorker} from './player-worker-factory';
+import {getWorker} from './players/player-worker-factory';
 
 enum GameState {
     RUNNING,

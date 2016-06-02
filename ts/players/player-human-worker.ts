@@ -1,6 +1,6 @@
-import {Board} from './board';
-import {Point} from './point';
-import {Pawn} from './pawn';
+import {Board} from './../board';
+import {Point} from './../point';
+import {Pawn} from './../pawn';
 
 let color = 0;
 let board = new Board(8);

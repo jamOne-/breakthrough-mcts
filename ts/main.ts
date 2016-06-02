@@ -1,7 +1,6 @@
 import {Game} from './game';
 import {Pawn} from './pawn';
 import {Point} from './point';
-import {getWorker} from './player-worker-factory';
 
 setTimeout(() => {
     let loading = document.getElementById('loading');

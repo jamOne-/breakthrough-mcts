@@ -1,6 +1,6 @@
-import {Board} from './board';
-import {Pawn} from './pawn';
-import {Point} from './point';
+import {Board} from './../board';
+import {Pawn} from './../pawn';
+import {Point} from './../point';
 
 class TreeNode {
     q : number;

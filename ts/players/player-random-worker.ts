@@ -1,4 +1,4 @@
-import {Board} from './board';
+import {Board} from './../board';
 
 let color;
 let board = new Board(8);
