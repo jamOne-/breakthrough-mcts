@@ -20,15 +20,17 @@ let thinkingTime = 10000;
 let cp = Math.SQRT1_2;
 let root : TreeNode = null;
 let color : number = null;
-let board = new Board(8);
+let board : Board = null
 let working = true;
 let requestTime = 0;
-board.initBoard();
 
 onmessage = (ev : MessageEvent) => {
     switch (ev.data.type) {
-        case 'color':
+        case 'init':
             color = ev.data.color;
+            board = new Board(ev.data.size);
+            board.initBoard();
+            
             moveRoot();
             UCTSearch();
             break;

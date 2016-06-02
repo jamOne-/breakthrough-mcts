@@ -3,14 +3,15 @@ import {Pawn} from './../pawn';
 import {Point} from './../point';
 
 let color;
-let board = new Board(8);
+let board : Board = null;
 let valueFunction : (board : Board) => number;
-board.initBoard();
 
 onmessage = (ev : MessageEvent) => {
     switch (ev.data.type) {
-        case 'color':
+        case 'init':
             color = ev.data.color;
+            board = new Board(ev.data.size);
+            board.initBoard();
             break;
         
         case 'stop':

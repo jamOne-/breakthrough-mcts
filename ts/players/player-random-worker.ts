@@ -1,13 +1,14 @@
 import {Board} from './../board';
 
 let color;
-let board = new Board(8);
-board.initBoard();
+let board : Board = null;
 
 onmessage = (ev : MessageEvent) => {
     switch (ev.data.type) {
-        case 'color':
+        case 'init':
             color = ev.data.color;
+            board = new Board(ev.data.size);
+            board.initBoard();
             break;
         
         case 'stop':

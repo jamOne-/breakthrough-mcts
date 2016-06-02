@@ -33,6 +33,7 @@ class Board {
         std::vector<std::vector<Pawn *> > board;
         std::stack<UndoHistory *> undo_stack;
         
+        Board() {};
         Board(int board_size) : board_size(board_size) {};
         void init_board();
         int check_end();

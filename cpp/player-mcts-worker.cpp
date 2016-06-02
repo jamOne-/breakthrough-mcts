@@ -32,7 +32,7 @@ int thinking_time = 10000;
 double cp = M_SQRT1_2;
 TreeNode * root = NULL;
 int color = -1;
-Board board = Board(8);
+Board board;
 bool working = true;
 long long request_time = 0;
 
@@ -50,6 +50,7 @@ extern "C" {
 	void UCT_search();
 	void move_root(int x1, int y1, int x2, int y2);
 	void set_color(int c) { color = c; };
+	void set_board(int size) { board = Board(size); board.init_board(); root = new TreeNode(NULL, &board); };
 	void set_request_time() { request_time = get_milliseconds(); };
 	void stop_working() { working = false; };
 	void move_pawn_called_by_js(int x1, int y1, int x2, int y2) {
@@ -63,8 +64,6 @@ long long get_milliseconds() {
 
 int main() {
 	srand(time(NULL));
-	board.init_board();
-	root = new TreeNode(NULL, &board);
 	init_onmessage();
 	
 	return 0;
@@ -74,9 +73,10 @@ void init_onmessage() {
 	EM_ASM(
 		onmessage = function(ev) {
 			switch (ev.data.type) {
-				case 'color':
-					console.log('doszedl color');
+				case 'init':
+					console.log('mcts asm.js init');
 					Module.ccall('set_color', null, ['number'], [ev.data.color]);
+					Module.ccall('set_board', null, ['number'], [ev.data.size]);
 					Module.ccall('UCT_search', null);
 					break;
 

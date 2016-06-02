@@ -39,7 +39,7 @@ export class Game {
         
         this._workers.forEach((worker, color) => { 
             worker.postMessage({ type: 'start' });
-            setTimeout(() => worker.postMessage({ type: 'color', color: color }), 1000);
+            setTimeout(() => worker.postMessage({ type: 'init', color: color, size : boardSize }), 1000);
             worker.onmessage = this._handleWorkerMessage.bind(this, color);
         });
     }

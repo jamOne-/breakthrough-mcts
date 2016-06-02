@@ -5,7 +5,7 @@
   "main": "js/generated/main.js",
   "scripts": {
     "server": "lite-server",
-    "em++": "em++ -O3 --memory-init-file 0 -std=c++11 -s EXPORTED_FUNCTIONS=\"['_main','_set_color','_move_root','_UCT_search','_stop_working','_set_request_time','_move_pawn_called_by_js']\" -s NO_EXIT_RUNTIME=1 -s TOTAL_MEMORY=500000000 ./cpp/player-mcts-worker.cpp ./cpp/board.cpp -o ./js/generated/player-mcts-asmjs-worker.js",
+    "em++": "em++ -O3 --memory-init-file 0 -std=c++11 -s EXPORTED_FUNCTIONS=\"['_main','_set_color','_set_board','_move_root','_UCT_search','_stop_working','_set_request_time','_move_pawn_called_by_js']\" -s NO_EXIT_RUNTIME=1 -s TOTAL_MEMORY=500000000 ./cpp/player-mcts-worker.cpp ./cpp/board.cpp -o ./js/generated/player-mcts-asmjs-worker.js",
     "build": "webpack && npm run em++"
   },
   "repository": {

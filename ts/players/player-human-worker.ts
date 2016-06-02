@@ -3,15 +3,16 @@ import {Point} from './../point';
 import {Pawn} from './../pawn';
 
 let color = 0;
-let board = new Board(8);
+let board : Board = null;
 let movePermitted = false;
 let selectedPawn : Pawn = null;
-board.initBoard();
 
 onmessage = (ev : MessageEvent) => {
     switch (ev.data.type) {
-        case 'color':
+        case 'init':
             color = ev.data.color;
+            board = new Board(ev.data.size);
+            board.initBoard();
             break;
 
         case 'stop':
