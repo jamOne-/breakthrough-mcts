@@ -34,7 +34,6 @@ class Board {
         std::stack<UndoHistory *> undo_stack;
         
         Board(int board_size) : board_size(board_size) {};
-        // ~Board();
         void init_board();
         int check_end();
         void next_turn();

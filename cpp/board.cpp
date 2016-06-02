@@ -36,23 +36,21 @@ void Board::init_board() {
 }
 
 int Board::check_end() {
-    // if (!_pawns[1].size()) return 0;
-    // if (!_pawns[0].size()) return 1;
-	bool flag = true;
+	bool no_pawns = true;
 	for (auto pawn : _pawns[1])
 		if (!pawn->dead) {
-			flag = false;
+			no_pawns = false;
 			break;
 		}
-	if (flag) return 0;
+	if (no_pawns) return 0;
 
-	flag = true;
+	no_pawns = true;
 	for (auto pawn : _pawns[0])
 		if (!pawn->dead) {
-			flag = false;
+			no_pawns = false;
 			break;
 		}
-	if (flag) return 1;
+	if (no_pawns) return 1;
 
     
     for (int x = 0; x < board_size; x++) {
@@ -117,11 +115,8 @@ void Board::move_pawn(Pawn * pawn, Point * point) {
         previous_pawn
     ));
     
-    if (previous_pawn) {
+    if (previous_pawn)
 		previous_pawn->dead = true;
-        //std::vector<Pawn *> & v = _pawns[previous_pawn->color];
-        //v.erase(std::find(v.begin(), v.end(), previous_pawn));
-    }
     
     board[pawn->position->y][pawn->position->x] = NULL;
     pawn->position->x = point->x;
@@ -137,7 +132,6 @@ void Board::undo_move() {
     undo_stack.pop();
 
 	if (history->previous_pawn)
-		//_pawns[history->previous_pawn->color].push_back(history->previous_pawn);
 		history->previous_pawn->dead = false;
 
 	board[history->moved_pawn->position->y][history->moved_pawn->position->x] = history->previous_pawn;

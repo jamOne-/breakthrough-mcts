@@ -26,6 +26,16 @@ struct TreeNode {
 	}
 };
 
+
+float aggressiveness = 1.0;
+int thinking_time = 10000;
+double cp = M_SQRT1_2;
+TreeNode * root = NULL;
+int color = -1;
+Board board = Board(8);
+bool working = true;
+long long request_time = 0;
+
 void init_onmessage();
 long long get_milliseconds();
 void move_best();
@@ -39,16 +49,13 @@ void back_up(TreeNode * v, int reward);
 extern "C" {
 	void UCT_search();
 	void move_root(int x1, int y1, int x2, int y2);
+	void set_color(int c) { color = c; };
+	void set_request_time() { request_time = get_milliseconds(); };
+	void stop_working() { working = false; };
+	void move_pawn_called_by_js(int x1, int y1, int x2, int y2) {
+		board.move_pawn(board.get_pawn(new Point(x1, y1)), new Point(x2, y2));
+	};
 }
-
-float aggressiveness = 1.0;
-int thinking_time = 10000;
-double cp = M_SQRT1_2;
-TreeNode * root = NULL;
-int color = -1;
-Board board = Board(8);
-bool working = true;
-long long request_time = 0;
 
 long long get_milliseconds() {
 	return std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now().time_since_epoch()).count();
@@ -60,30 +67,12 @@ int main() {
 	root = new TreeNode(NULL, &board);
 	init_onmessage();
 	
-	// ...
-	// color = 0;
-	// request_time = get_milliseconds();
-	// move_root();
-	// UCT_search();
-	// ...
-
-	// system("PAUSE");
 	return 0;
-}
-
-extern "C" {
-	void set_color(int c) { color = c; };
-	void set_request_time() { request_time = get_milliseconds(); };
-	void stop_working() { working = false; };
-	void move_pawn_called_by_js(int x1, int y1, int x2, int y2) {
-		board.move_pawn(board.get_pawn(new Point(x1, y1)), new Point(x2, y2));
-	};
 }
 
 void init_onmessage() {
 	EM_ASM(
 		onmessage = function(ev) {
-			// console.log('onmessage', ev.data.type);
 			switch (ev.data.type) {
 				case 'color':
 					console.log('doszedl color');
@@ -100,7 +89,6 @@ void init_onmessage() {
 					break;
 
 				case 'moved':
-					//board.movePawn(board.getPawn(ev.data.positionBefore), ev.data.positionAfter);
 					Module.ccall('move_root', null, ['number', 'number', 'number', 'number'],
 						[ev.data.positionBefore.x, ev.data.positionBefore.y, ev.data.positionAfter.x, ev.data.positionAfter.y]
 					);
@@ -127,7 +115,6 @@ void UCT_search() {
 	while (working) {
 		if (now - start > 500)
 			return emscripten_async_call(UCT_search_packed, NULL, 0);
-			// return EM_ASM(setTimeout(Module.cwrap('UCT_search'), 0));
 
 		if (request_time && now - request_time > thinking_time)
 			move_best();
@@ -166,9 +153,6 @@ TreeNode * expand(TreeNode * v) {
 	for (int i = 0; i < length; i++)
 		if (!v->children[i]) candidates.push_back(i);
 		
-	if (length < candidates.size())
-		std::cout << "ZLE SIE DZIEJE\n";
-
 	int move_number = candidates[rand() % candidates.size()];
 	Move * move = moves->at(move_number);
 	board.move_pawn(move->pawn, move->point);
@@ -259,9 +243,6 @@ void move_root(int x1, int y1, int x2, int y2) {
 			move_number++;
 		}
 		
-		if (move_number >= root->children.size() || root->children.size() != board.get_possible_moves_of_pawns()->size())
-			std::cout << "move_root: bardzo złe rzeczy\n";
-
 		root = root->children[move_number];
 		if (root) {
 			root->parent->children[move_number] = NULL;
