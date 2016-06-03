@@ -243,6 +243,9 @@ void move_root(int x1, int y1, int x2, int y2) {
 			move_number++;
 		}
 		
+		if (move_number > board.get_possible_moves_of_pawns()->size())
+			std::cout << "move_number > size()!!!!!\n";
+		
 		root = root->children[move_number];
 		if (root) {
 			root->parent->children[move_number] = NULL;

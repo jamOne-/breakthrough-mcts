@@ -7,16 +7,19 @@ Strona projektu: https://dominiks.site
 
 ### Uruchomienie projektu
 
-Do uruchomienia projektu potrzebny jest Node.js.
+Do uruchomienia projektu potrzebny jest kompilator Emscripten oraz Node.js.
+
 Będąc w katalogu projektu instalujemy zależności projektu poleceniem:
 ```sh
 $ npm install
 ```
 
-Później będąc w katalogu projektu wpisujemy:
+Włączamy emscripten command prompt, nawigujemy do katalogu projektu i wpisujemy:
 ```sh
-$ webpack
-# ewentualnie webpack -w, jeżeli interesuje nas tryb watcher
+$ npm run build
+# ewentualnie:
+#   - npm run em++ (sama kompilacja kodu c++)
+#   - webpack      (transpilcja kodu TypeScript)
 ```
 
 Dodatkowo aplikację do poprawnego działania trzeba jakoś serwować.

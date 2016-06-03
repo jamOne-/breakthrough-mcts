@@ -30,7 +30,7 @@ class Main {
         let drawBoard = () => {
             context.fillStyle = "rgba(192, 161, 114, 1)";
             for (let i = 0; i < Main._game.boardSize; i++) {
-                for (let j = (Main._game.boardSize % 2 || i % 2 ? 0 : 1); j < Main._game.boardSize; j += 2)
+                for (let j = ~(i & 1); j < Main._game.boardSize; j += 2)
                     context.fillRect (j * squareSize, i * squareSize, squareSize, squareSize);
             }
         };

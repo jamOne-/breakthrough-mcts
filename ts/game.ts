@@ -45,6 +45,8 @@ export class Game {
     }
     
     private _handleWorkerMessage(color : number, ev : MessageEvent) {
+        if (color != this.board.turn) return;
+        
         switch (ev.data.type) {
             case 'move':
                 this.board.movePawn(this.board.getPawn(ev.data.positionBefore), ev.data.positionAfter);
@@ -93,7 +95,7 @@ export class Game {
             return;
         }
 
-        this.gameState = GameState.END;
+        this.stop();
         this.callEndListeners(end);
     }
     
