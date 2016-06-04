@@ -7,7 +7,7 @@ setTimeout(() => {
     let loading = document.getElementById('loading');
     loading.classList.add('loading-done');
     document.getElementById('content-container').classList.remove('hidden');
-    setTimeout(() => loading.classList.add('hidden'), 350);
+    setTimeout(() => loading.remove(), 350);
 }, 1000);
 
 class Main {

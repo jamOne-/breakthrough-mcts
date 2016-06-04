@@ -31,7 +31,7 @@ export let getOption = (type : string) => {
     switch (type) {
         case 'mcts':
         case 'mcts asmjs':
-            return { default: "10000", label: "Thinking time (ms)" };
+            return { default: "2500", label: "Thinking time (ms)" };
             
         case 'minmax 1':
             return { default: "5", label: "Search depth" };
