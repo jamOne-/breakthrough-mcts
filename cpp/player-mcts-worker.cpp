@@ -43,7 +43,6 @@ TreeNode * tree_policy(TreeNode * v);
 TreeNode * expand(TreeNode * v);
 int best_child(TreeNode * v, double c);
 int default_policy(int turn);
-int do_some_random_moves(int turn);
 void back_up(TreeNode * v, int reward);
 
 extern "C" {
@@ -188,10 +187,6 @@ int best_child(TreeNode * v, double c) {
 }
 
 int default_policy(int turn) {
-	return do_some_random_moves(turn);
-}
-
-int do_some_random_moves(int turn) {
 	int winner = board.check_end();
 	if (winner != -1) return winner ^ turn;
 
@@ -210,7 +205,7 @@ int do_some_random_moves(int turn) {
 	Move * move = moves->at(rand() % moves->size());
 	board.move_pawn(move->pawn, move->point);
 
-	int result = do_some_random_moves(turn);
+	int result = default_policy(turn);
 
 	board.undo_move();
 	
@@ -244,9 +239,6 @@ void move_root(int x1, int y1, int x2, int y2) {
 			
 			move_number++;
 		}
-		
-		if (move_number > board.get_possible_moves_of_pawns()->size())
-			std::cout << "move_number > size()!!!!!\n";
 		
 		root = root->children[move_number];
 		if (root) {

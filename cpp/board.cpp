@@ -101,7 +101,7 @@ void Board::recalculate_moves() {
 
 			if (x >= 0 && x < board_size &&
 				y >= 0 && y < board_size &&
-				(!board[y][x] || (deltax != 0 && board[y][x]->color != pawn->color)))
+				(!board[y][x] || board[y][x]->dead || (deltax != 0 && board[y][x]->color != pawn->color)))
 				_moves.push_back(new Move(pawn, new Point(x, y)));
 		}
 	}
