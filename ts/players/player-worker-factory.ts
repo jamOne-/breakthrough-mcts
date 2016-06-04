@@ -26,3 +26,17 @@ export let getWorker = (type : string) => {
             return worker;
     }
 }
+
+export let getOption = (type : string) => {
+    switch (type) {
+        case 'mcts':
+        case 'mcts asmjs':
+            return { default: "10000", label: "Thinking time (ms)" };
+            
+        case 'minmax 1':
+            return { default: "5", label: "Search depth" };
+            
+        default:
+            return null;
+    }
+}

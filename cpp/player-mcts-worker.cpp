@@ -50,6 +50,7 @@ extern "C" {
 	void UCT_search();
 	void move_root(int x1, int y1, int x2, int y2);
 	void set_color(int c) { color = c; };
+	void set_thinking_time(int time) { thinking_time = time; };
 	void set_board(int size) { board = Board(size); board.init_board(); root = new TreeNode(NULL, &board); };
 	void set_request_time() { request_time = get_milliseconds(); };
 	void stop_working() { working = false; };
@@ -76,6 +77,7 @@ void init_onmessage() {
 				case 'init':
 					console.log('mcts asm.js init');
 					Module.ccall('set_color', null, ['number'], [ev.data.color]);
+					Module.ccall('set_thinking_time', null, ['number'], [ev.data.option]);
 					Module.ccall('set_board', null, ['number'], [ev.data.size]);
 					Module.ccall('UCT_search', null);
 					break;

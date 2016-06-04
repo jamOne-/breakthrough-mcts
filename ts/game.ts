@@ -19,11 +19,12 @@ export class Game {
 
     public constructor(public boardSize : number,
                     player1Type : string,
-                    player2Type : string) {
+                    player2Type : string,
+                    playerOptions : number[]) {
         this.restart.apply(this, arguments);
     }
 
-    public restart(boardSize : number, player1Type: string, player2Type : string) {
+    public restart(boardSize : number, player1Type: string, player2Type : string, playerOptions : number[]) {
         this._drawListeners = [];
         this._endListeners = [];
         this.gameState = GameState.RUNNING;
@@ -39,7 +40,12 @@ export class Game {
         
         this._workers.forEach((worker, color) => { 
             worker.postMessage({ type: 'start' });
-            setTimeout(() => worker.postMessage({ type: 'init', color: color, size : boardSize }), 1000);
+            setTimeout(() => worker.postMessage({
+                type: 'init',
+                color: color,
+                size: boardSize,
+                option: playerOptions[color]
+            }), 1000);
             worker.onmessage = this._handleWorkerMessage.bind(this, color);
         });
     }

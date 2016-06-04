@@ -29,6 +29,7 @@ onmessage = (ev : MessageEvent) => {
         case 'init':
             color = ev.data.color;
             board = new Board(ev.data.size);
+            thinkingTime = ev.data.option;
             board.initBoard();
             
             moveRoot();

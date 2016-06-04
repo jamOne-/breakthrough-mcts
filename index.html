@@ -60,9 +60,9 @@
                                 </select>
                             </div>
                             
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label option-div hide hidden" id="option-white-div">
                                 <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="option-white" value="10000">
-                                <label class="mdl-textfield__label" for="option-white">Thinking time (ms)</label>
+                                <label class="mdl-textfield__label" for="option-white" id="option-white-label">Thinking time (ms)</label>
                                 <span class="mdl-textfield__error">Input is not a number!</span>
                             </div>
                         </div>
@@ -82,15 +82,15 @@
                                 </select>
                             </div>
                             
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input class="mdl-textfield__input" type="text" pattern="-?[0-9]*(\.[0-9]+)?" id="option-black" value="5">
-                                <label class="mdl-textfield__label" for="sample2">Search depth</label>
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label option-div hide hidden" id="option-black-div">
+                                <input class="mdl-textfield__input" type="text" pattern="[0-9]+" id="option-black" value="10000">
+                                <label class="mdl-textfield__label" for="sample2" id="option-black-label">Thinking time (ms)</label>
                                 <span class="mdl-textfield__error">Input is not a number!</span>
                             </div>
                         </div>
                     </div>
                     
-                    <div style="display: flex; justify-content: space-around; flex-direction: column; margin-bottom: 20px;">
+                    <div style="display: flex; justify-content: space-around; flex-wrap: wrap; width: 100%;">
                         <div class="mdl-select mdl-js-select">
                             <label class="mdl-input_label" for="board-size">Board size</label>
                             <select class="mdl-select__input" id="board-size">
@@ -101,9 +101,12 @@
                                 <option value="10">10 x 10</option>
                             </select>
                         </div>
-                    
-                        <button id="button-new-game" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect" style="width: 100%">New game</button>
+                        
+                        <div style="width: 300px">
+                        </div>
                     </div>
+                    
+                    <button id="button-new-game" class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored mdl-js-ripple-effect" style="width: 300px; margin-bottom: 20px;">New game</button>
                 </div>
             </div>
 

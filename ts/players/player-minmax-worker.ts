@@ -5,12 +5,14 @@ import {Point} from './../point';
 let color;
 let board : Board = null;
 let valueFunction : (board : Board) => number;
+let depth : number;
 
 onmessage = (ev : MessageEvent) => {
     switch (ev.data.type) {
         case 'init':
             color = ev.data.color;
             board = new Board(ev.data.size);
+            depth = ev.data.option;
             board.initBoard();
             break;
         
@@ -51,7 +53,7 @@ onmessage = (ev : MessageEvent) => {
 }
 
 let move = () => {
-    let moves = negamax(5, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
+    let moves = negamax(depth, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
     let move = moves[Math.floor(Math.random() * moves.length)];
 
     (postMessage as any)({

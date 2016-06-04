@@ -23,6 +23,16 @@
     width: 60%;
 }
 
+.option-div {
+    transition: opacity .5s ease-out,
+                transform .5s linear;
+}
+
+.option-div.hide {
+    opacity: 0;
+    transform: translateY(-50px);
+}
+
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */
   -webkit-user-select: none;   /* Chrome/Safari/Opera */
