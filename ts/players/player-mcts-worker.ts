@@ -5,12 +5,14 @@ import {Point} from './../point';
 class TreeNode {
     q : number;
     n : number;
+    expanded : number;
     children : { [moveNumber: number] : TreeNode; };
 
     public constructor(public parent : TreeNode,
                        public moves : { pawn : Pawn, point : Point }[]) {
         this.q = 0;
         this.n = 0;
+        this.expanded = 0;
         this.children = {};
     }
 }
@@ -77,7 +79,7 @@ let UCTSearch = () => {
 
 let treePolicy = (v : TreeNode) : TreeNode => {
     while (v.moves.length > 0) {
-        if (v.n < v.moves.length)
+        if (v.expanded < v.moves.length)
             return expand(v);
 
         let best = bestChild(v, cp);
@@ -102,6 +104,7 @@ let expand = (v : TreeNode) : TreeNode => {
 
     let newNode = new TreeNode(v, board.getPossibleMovesOfPawns(board.turn));
     v.children[moveNumber] = newNode;
+    v.expanded++;
     
     return newNode;    
 }

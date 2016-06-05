@@ -10,11 +10,11 @@
 #include <emscripten.h>
 
 struct TreeNode {
-	int q, n;
+	int q, n, expanded;
 	TreeNode * parent;
 	std::vector<TreeNode *> children;
 
-	TreeNode(TreeNode * parent, Board * board) : q(0), n(0), parent(parent) {
+	TreeNode(TreeNode * parent, Board * board) : q(0), n(0), expanded(0), parent(parent) {
 		unsigned length = board->get_possible_moves_of_pawns()->size();
 		for (int i = 0; i < length; i++)
 			children.push_back(NULL);
@@ -53,9 +53,6 @@ extern "C" {
 	void set_board(int size) { board = Board(size); board.init_board(); root = new TreeNode(NULL, &board); };
 	void set_request_time() { request_time = get_milliseconds(); };
 	void stop_working() { working = false; };
-	void move_pawn_called_by_js(int x1, int y1, int x2, int y2) {
-		board.move_pawn(board.get_pawn(new Point(x1, y1)), new Point(x2, y2));
-	};
 }
 
 long long get_milliseconds() {
@@ -91,9 +88,6 @@ void init_onmessage() {
 
 				case 'moved':
 					Module.ccall('move_root', null, ['number', 'number', 'number', 'number'],
-						[ev.data.positionBefore.x, ev.data.positionBefore.y, ev.data.positionAfter.x, ev.data.positionAfter.y]
-					);
-					Module.ccall('move_pawn_called_by_js', null, ['number', 'number', 'number', 'number'],
 						[ev.data.positionBefore.x, ev.data.positionBefore.y, ev.data.positionAfter.x, ev.data.positionAfter.y]
 					);
 					break;
@@ -133,7 +127,7 @@ void UCT_search() {
 
 TreeNode * tree_policy(TreeNode * v) {
 	while (board.get_possible_moves_of_pawns()->size()) {
-		if (v->n < board.get_possible_moves_of_pawns()->size())
+		if (v->expanded < board.get_possible_moves_of_pawns()->size())
 			return expand(v);
 
 		int best = best_child(v, cp);
@@ -152,7 +146,8 @@ TreeNode * expand(TreeNode * v) {
 	std::vector<int> candidates;
 
 	for (int i = 0; i < length; i++)
-		if (!v->children[i]) candidates.push_back(i);
+		if (v->children[i] == NULL)
+			candidates.push_back(i);
 		
 	int move_number = candidates[rand() % candidates.size()];
 	Move * move = moves->at(move_number);
@@ -160,6 +155,7 @@ TreeNode * expand(TreeNode * v) {
 
 	TreeNode * new_node = new TreeNode(v, &board);
 	v->children[move_number] = new_node;
+	v->expanded++;
 
 	return new_node;
 }
@@ -195,7 +191,7 @@ int default_policy(int turn) {
 
 	if (rand() % 100 < aggressiveness * 100) {
 		for (auto move : *moves)
-			if (board.get_pawn(move->point) && !board.get_pawn(move->point)->dead)
+			if (board.get_pawn(move->point))
 				attack_moves->push_back(move);
 
 		if (attack_moves->size())
@@ -239,8 +235,21 @@ void move_root(int x1, int y1, int x2, int y2) {
 			
 			move_number++;
 		}
+			
+		if (!root->children[move_number]) {
+			exit(-526452);
+		}
+		
+		Point * p1 = new Point(x1, y1);
+		Point * p2 = new Point(x2, y2);
+		
+		board.move_pawn(board.get_pawn(p1), p2);
+		
+		delete p1;
+		delete p2;
 		
 		root = root->children[move_number];
+		
 		if (root) {
 			root->parent->children[move_number] = NULL;
 			delete root->parent;
@@ -249,7 +258,7 @@ void move_root(int x1, int y1, int x2, int y2) {
 	}
 
 	if (!root)
-		root = new TreeNode(NULL, &board);
+		exit(-526452);
 }
 
 void move_best() {
