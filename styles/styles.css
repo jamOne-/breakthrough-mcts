@@ -33,6 +33,11 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    transition: opacity .2s ease-out;
+}
+
+#game-canvas-overlay.totally-transparent {
+    opacity: 0;
 }
 
 .option-div {

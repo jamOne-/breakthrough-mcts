@@ -150,7 +150,11 @@ class Main {
     }
     
     private static _hideCanvasOverlay() {
-        this._canvas_overlay.classList.add('hidden');
+        this._canvas_overlay.classList.add('totally-transparent');
+        setTimeout(() => {
+            this._canvas_overlay.classList.add('hidden');
+            this._canvas_overlay.classList.remove('totally-transparent');
+        }, 200);
     }
 }
 
