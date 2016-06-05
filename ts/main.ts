@@ -132,7 +132,7 @@ class Main {
         
         if (!option) {
             optionDiv.classList.add('hide');
-            setTimeout(() => { optionDiv.classList.add('hidden'); }, 500);    
+            setTimeout(() => { optionDiv.classList.add('hidden'); }, 300);    
             return;
         }
         
