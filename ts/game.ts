@@ -11,6 +11,8 @@ enum GameState {
 export class Game {
     private _drawListeners : (() => void)[];
     private _endListeners: ((winner : number) => void)[];
+    private _initializeListeners: (() => void)[];
+    private _gameRunListeners: (() => void)[];
     private _workers : Worker[];
 
     public selectedPawn : Pawn;
@@ -27,6 +29,8 @@ export class Game {
     public restart(boardSize : number, player1Type: string, player2Type : string, playerOptions : number[]) {
         this._drawListeners = [];
         this._endListeners = [];
+        this._initializeListeners = [];
+        this._gameRunListeners = [];
         this.gameState = GameState.RUNNING;
         this.selectedPawn = null;
 
@@ -77,8 +81,12 @@ export class Game {
     }
     
     public run() {
+        this.callInitializeListeners();
         this.callDrawListeners();
-        setTimeout(() => this._workers[0].postMessage({ type: 'move' }), 2000);
+        setTimeout(() => {
+            this.callGameRunListeners();
+            this._workers[0].postMessage({ type: 'move' });
+        }, 2000);
     }
 
     public moved() {
@@ -123,5 +131,21 @@ export class Game {
     
     public callEndListeners(winner : number) {
         this._endListeners.forEach(f => f(winner));
+    }
+    
+    public addInitializingListener(f : () => void) {
+        this._initializeListeners.push(f);
+    }
+    
+    public callInitializeListeners() {
+        this._initializeListeners.forEach(f => f());
+    }
+    
+    public addGameRunListener(f : () => void) {
+        this._gameRunListeners.push(f);
+    }
+    
+    public callGameRunListeners() {
+        this._gameRunListeners.forEach(f => f());
     }
 }

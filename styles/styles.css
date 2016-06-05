@@ -23,6 +23,18 @@
     width: 60%;
 }
 
+#game-canvas-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    opacity: .8;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .option-div {
     transition: opacity .5s ease-out,
                 transform .5s linear;

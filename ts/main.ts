@@ -12,18 +12,21 @@ setTimeout(() => {
 
 class Main {
     private static _canvas : HTMLCanvasElement;
+    private static _canvas_overlay : HTMLDivElement;
     private static _game : Game;
     
     public static init() {
         Main._canvas = <HTMLCanvasElement>document.getElementById('game-canvas');
+        Main._canvas_overlay = <HTMLDivElement>document.getElementById('game-canvas-overlay');
         Main._canvas.addEventListener('click', Main._propagateClick, false);
-        window.addEventListener('resize', Main._resizeCanvas, false);
+        window.addEventListener('resize', Main._windowResized, false);
         document.getElementById('button-new-game').onclick = Main._createGame;
         document.getElementById('player-white').onchange = Main._playerTypeChanged.bind(this, 'white');
         document.getElementById('player-black').onchange = Main._playerTypeChanged.bind(this, 'black');
         
-        Main._resizeCanvas();
-        Main._createGame();
+        Main._windowResized();
+        Main._createFakeGame();
+        Main.draw();
     }
 
     public static draw() {
@@ -83,8 +86,14 @@ class Main {
         if (Main._game) Main._game.stop();
         Main._game = new Game(parseInt(size), white, black, [whiteOption, blackOption]);
         Main._game.addDrawListener(Main.draw);
-        Main._game.addEndListener((winner) => console.info(winner + ' wygral'));
+        Main._game.addInitializingListener(Main._setCanvasOverlay.bind(Main, 'Initializing...'));
+        Main._game.addGameRunListener(Main._hideCanvasOverlay.bind(Main));
+        Main._game.addEndListener(winner => Main._setCanvasOverlay((winner ? 'Black' : 'White') + ' wins'));
         Main._game.run();
+    }
+    
+    private static _createFakeGame() {
+        Main._game = new Game(8, 'human', 'human', []);
     }
     
     private static _propagateClick(ev : MouseEvent) {
@@ -102,12 +111,16 @@ class Main {
         return Main._canvas.width / Main._game.boardSize;
     }
 
-    private static _resizeCanvas() {
+    private static _windowResized() {
         let len = Math.min(window.innerHeight - (window.innerWidth < 1000 ? 56 : 64), window.innerWidth);
         Main._canvas.style.width = len.toString() + 'px';
         Main._canvas.style.height = len.toString() + 'px';
         Main._canvas.width = len;
         Main._canvas.height = len;
+        
+        Main._canvas_overlay.style.width = len.toString() + 'px';
+        Main._canvas_overlay.style.height = len.toString() + 'px';
+        Main._canvas_overlay.style.left = Main._canvas.getBoundingClientRect().left + 'px';
         
         if (Main._game) Main.draw();
     }
@@ -129,6 +142,15 @@ class Main {
         
         optionDiv.classList.remove('hidden');
         setTimeout(() => { optionDiv.classList.remove('hide'); }, 10);
+    }
+    
+    private static _setCanvasOverlay(text : string) {
+        this._canvas_overlay.innerHTML = '<h3>' + text + '</h3>';
+        this._canvas_overlay.classList.remove('hidden');
+    }
+    
+    private static _hideCanvasOverlay() {
+        this._canvas_overlay.classList.add('hidden');
     }
 }
 
