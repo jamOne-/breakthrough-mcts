@@ -1,3 +1,35 @@
+#button-new-game {
+    width: 300px;
+    margin-bottom: 20px;
+}
+
+#content-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+#game-canvas {
+    flex-grow: 0;
+}
+
+#game-canvas-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: 2;
+    opacity: .8;
+    background-color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity .2s ease-out;
+}
+
+#game-canvas-overlay.totally-transparent {
+    opacity: 0;
+}
+
 #loading {
     z-index: 2;
     position: absolute;
@@ -23,21 +55,32 @@
     width: 60%;
 }
 
-#game-canvas-overlay {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: 2;
-    opacity: .8;
-    background-color: white;
+#settings-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
     justify-content: center;
-    transition: opacity .2s ease-out;
+
+    flex-grow: 1;
 }
 
-#game-canvas-overlay.totally-transparent {
-    opacity: 0;
+.flex-column {
+    display: flex;
+    flex-direction: column;
+}
+
+.flex-with-wrap {
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    
+    width: 100%;
+}
+
+.transparent-icon-32 {
+    background-color: rgba(0, 0, 0, 0);
+    width: 32px;
+    height: 32px;
 }
 
 .option-div {
@@ -49,6 +92,11 @@
     opacity: 0;
     transform: translateY(-50px);
 }
+
+/* 
+    select input from https://github.com/google/material-design-lite/issues/854#issuecomment-124834007
+    06.06.2016: select input still not implemented in mdl
+*/
 
 .noselect {
   -webkit-touch-callout: none; /* iOS Safari */

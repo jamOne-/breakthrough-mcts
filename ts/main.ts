@@ -7,6 +7,7 @@ setTimeout(() => {
     let loading = document.getElementById('loading');
     loading.classList.add('loading-done');
     document.getElementById('content-container').classList.remove('hidden');
+    document.getElementById('footer').classList.remove('hidden');
     setTimeout(() => loading.remove(), 350);
 }, 1000);
 
@@ -26,6 +27,8 @@ class Main {
         
         Main._windowResized();
         Main._createFakeGame();
+        Main._playerTypeChanged('white', null);
+        Main._playerTypeChanged('black', null);
         Main.draw();
     }
 
@@ -126,7 +129,7 @@ class Main {
     }
     
     private static _playerTypeChanged(color : string, ev : Event) {
-        let playerType = (<HTMLSelectElement>ev.target).value;
+        let playerType = (<HTMLSelectElement>document.getElementById('player-' + color)).value;
         let option = getOption(playerType);
         let optionDiv = document.getElementById('option-' + color + '-div');
         

@@ -9,7 +9,7 @@ export let getWorker = (type : string) => {
             return (new MCTSWorker() as Worker);
             
         case 'mcts asmjs':
-            return new Worker('/js/generated/player-mcts-asmjs-worker.js');
+            return new Worker('./js/generated/player-mcts-asmjs-worker.js');
         
         case 'random':
             return (new RandomWorker() as Worker);
