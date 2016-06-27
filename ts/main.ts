@@ -8,6 +8,7 @@ setTimeout(() => {
     loading.classList.add('loading-done');
     document.getElementById('content-container').classList.remove('hidden');
     document.getElementById('footer').classList.remove('hidden');
+    document.getElementById('game-canvas-overlay').style.left = document.getElementById('game-canvas').getBoundingClientRect().left + 'px';
     setTimeout(() => loading.remove(), 350);
 }, 1000);
 
@@ -81,10 +82,10 @@ class Main {
         let white = (<HTMLSelectElement>document.getElementById('player-white')).value;
         let black = (<HTMLSelectElement>document.getElementById('player-black')).value;
         let size = (<HTMLSelectElement>document.getElementById('board-size')).value;
-        let whiteOption = parseFloat((<HTMLInputElement>document.getElementById('option-white')).value) /*||
-                          parseFloat(getOption(white).default);*/
-        let blackOption = parseFloat((<HTMLInputElement>document.getElementById('option-black')).value) /*||
-                          parseFloat(getOption(black).default);*/
+        let whiteOption = parseFloat((<HTMLInputElement>document.getElementById('option-white')).value) ||
+                          parseFloat(getOption(white).default);
+        let blackOption = parseFloat((<HTMLInputElement>document.getElementById('option-black')).value) ||
+                          parseFloat(getOption(black).default);
         
         if (Main._game) Main._game.stop();
         Main._game = new Game(parseInt(size), white, black, [whiteOption, blackOption]);

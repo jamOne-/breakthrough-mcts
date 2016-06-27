@@ -77,6 +77,14 @@
     width: 100%;
 }
 
+.mdl-layout__header-row .mdl-navigation__link {
+    color: antiquewhite;
+}
+
+.mdl-layout__header-row .mdl-navigation__link:hover {
+    color: white;
+}
+
 .transparent-icon-32 {
     background-color: rgba(0, 0, 0, 0);
     width: 32px;

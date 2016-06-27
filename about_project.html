@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>About project | Breakthrough</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta charset="utf-8">
+        <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
+        <link rel="icon" href="images/favicon.ico" type="image/x-icon">
+
+        <link rel="stylesheet" href="./styles/material.min.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+        <link rel="stylesheet" href="./styles/styles.css">
+
+        <script src="./js/dependencies/material.min.js"></script>
+        <script src="./js/dependencies/material_select.js"></script>
+    </head>
+    <body>
+        <div class="mdl-layout mdl-js-layout mdl-layout--no-desktop-drawer-button mdl-layout--fixed-header">
+            <header id="header" class="mdl-layout__header mdl-layout__header--scroll">
+                <div class="mdl-layout__header-row">
+                <span class="mdl-layout-title">Breakthrough</span>
+                <div class="mdl-layout-spacer"></div>
+                <nav class="mdl-navigation mdl-layout--large-screen-only">
+                    <a class="mdl-navigation__link" href="index.html">Play</a>
+                    <a class="mdl-navigation__link" href="about_project.html">About project</a>
+                    <a class="mdl-navigation__link" href="">About me</a>
+                </nav>
+                </div>
+            </header>
+            <div class="mdl-layout__drawer">
+                <span class="mdl-layout-title">Breakthrough</span>
+                <nav class="mdl-navigation">
+                    <a class="mdl-navigation__link" href="index.html">Play</a>
+                    <a class="mdl-navigation__link" href="about_project.html">About project</a>
+                    <a class="mdl-navigation__link" href="">About me</a>
+                </nav>
+            </div>
+            <main class="mdl-layout__content">
+                <div class="mdl-grid">
+                    <div class="mdl-cell mdl-cell--2-col"></div>
+                    <div class="mdl-cell mdl-cell--8-col">
+                        <h3>About project</h3>
+                        <br>
+
+                        <h4>Game rules</h4>
+                        <p> Initially, the two front and the two back rows are filled with pieces. 
+                            Choose a player to go first; then play alternates, with each player moving one piece per turn.
+                            A piece may move one space straight or diagonally forward if the target square is empty.
+                            A piece may move into a square containing an opponent's piece if and only if that square is one step diagonally forward.
+                            The opponent's piece is removed and the player's piece replaces it. 
+                            Note that capturing is not compulsory, nor is it "chained" as in checkers.
+                            
+                            The first player to reach the opponent's home row — the one farthest from the player — is the winner.
+                            If all the pieces of a player are captured, that player loses.
+                            A draw is impossible because pieces can only move ahead (or be captured), and the piece closest to the opponent's home row always has at least one forward diagonal move available.
+                            <br>
+
+                            <i>(source <a href="https://en.wikipedia.org/wiki/Breakthrough_(board_game)" target="_blank">wikipedia.org</a>)</i>
+                        </p>
+                        <br>
+
+                        <h4>Player types</h4>
+                        <p>
+                            <ul>
+                                <li>Human — no computer player here; you just play the game locally using mouse.</li>
+                                <li>Random — the weakest computer player, he just makes random move.</li>
+                                <li>MinMax — better computer player, he minimizes the possible loss for a worst case scenario. His search depth can be set,
+                                    which means how many moves forward he can analyze. For example, if set to 5, the player will analyze his 3 moves and opponent's 2
+                                    (all of his possible moves, then all posibilities of response of the opponent, then player's responses and so on).
+                                    <br>
+                                    Note that the higher the number is, the more time it takes to calculate the move.
+                                </li>
+                                <li>MCTS — computer player, which makes analysis of the most promising moves, expanding the search tree based on random sampling of the search space.
+                                    His analysis is based on many playouts. Player's thinking time can be set — the higher this number is, the more playouts he can analyze.
+                                    <br>
+                                    Thinking time is set with an error of 0-500ms.
+                                </li>
+                                <li>MCTS asm.js — 3-4 times faster version of MCTS (uses asm.js optimalizations).</li>
+                            </ul>
+                        </p>
+                        <br>
+
+                        <h4>Algorithms used</h4>
+                        <h5>MinMax</h5>
+                        <p>
+                            Instead of classic MinMax, I've implemented <a href="https://en.wikipedia.org/wiki/Negamax" target="_blank">Negamax with alpha beta prunning</a>.
+                        </p>
+                        <h5>Monte-Carlo Tree Search</h5>
+                        <p>
+                            <a href="https://en.wikipedia.org/wiki/Monte_Carlo_tree_search" target="_blank">Monte-Carlo Tree Search</a> with UCT (Upper Confidence Bound 1 applied to trees) and with playout heuristic.
+                            They aren't totally random, with 99% chance, if there's a capturing move, this move is chosen. If there's more than one capturing move,
+                            with 99% chance, the one with enemy piece standing the furthest from its base is chosen.
+                        </p>
+                        <br>
+
+                        <h4>Technologies used</h4>
+                        <p>
+                            <ul>
+                                <li><a href="https://getmdl.io/" target="_blank">Material Design Lite</a></li>
+                                <li><a href="http://www.typescriptlang.org/" target="_blank">TypeScript</a></li>
+                                <li><a href="https://webpack.github.io/" target="_blank">webpack</a></li>
+                                <li><a href="https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers" target="_blank">Web Workers</a></li>
+                                <li><a href="http://kripken.github.io/emscripten-site/" target="_blank">Emscripten compiler</a></li>
+                            </ul>
+                        </p>
+
+                    </div>
+                    <div class="mdl-cell mdl-cell--2-col"></div>
+                </div>
+
+                <footer id="footer" class="mdl-mini-footer">
+                    <div class="mdl-mini-footer__left-section">
+                        <div class="mdl-logo">
+                        Bachelor thesis - Dominik Rabij 2016
+                        </div>
+
+                        <!--<div class="mdl-logo">
+                        More Information
+                        </div>
+                        <ul class="mdl-mini-footer__link-list">
+                        <li><a href="#">Help</a></li>
+                        <li><a href="#">Privacy and Terms</a></li>
+                        <li><a href="#">User Agreement</a></li>
+                        </ul>-->
+                    </div>
+                    <div class="mdl-mini-footer__right-section">
+                        <a target="_blank" href="https://github.com/jamOne-/breakthrough-mcts"><img src="images/GitHub-Mark-Light-32px.png" class="transparent-icon-32"></a>
+                    </div>
+                </footer>
+            </main>
+        </div>
+    </body>
+</html>
