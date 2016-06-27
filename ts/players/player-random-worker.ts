@@ -40,3 +40,7 @@ let move = () => {
     
     board.movePawn(move.pawn, move.point);
 }
+
+(postMessage as any)({
+    type: 'ready'
+});

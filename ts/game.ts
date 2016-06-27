@@ -4,6 +4,7 @@ import {Board} from './board';
 import {getWorker} from './players/player-worker-factory';
 
 enum GameState {
+    INITIALIZING,
     RUNNING,
     END
 }
@@ -14,6 +15,8 @@ export class Game {
     private _initializeListeners: (() => void)[];
     private _gameRunListeners: (() => void)[];
     private _workers : Worker[];
+    private _workersReady : number;
+    private _playerOptions : number[];
 
     public selectedPawn : Pawn;
     public gameState : GameState;
@@ -31,47 +34,62 @@ export class Game {
         this._endListeners = [];
         this._initializeListeners = [];
         this._gameRunListeners = [];
-        this.gameState = GameState.RUNNING;
+        this.gameState = GameState.INITIALIZING;
         this.selectedPawn = null;
 
         this.board = new Board(boardSize);
         this.board.initBoard();
         
+        this._playerOptions = playerOptions;
+        this._workersReady = 0;
         this._workers = [
             getWorker(player1Type),
             getWorker(player2Type)
         ];
-        
+
         this._workers.forEach((worker, color) => { 
-            worker.postMessage({ type: 'start' });
-            setTimeout(() => worker.postMessage({
-                type: 'init',
-                color: color,
-                size: boardSize,
-                option: playerOptions[color]
-            }), 1000);
             worker.onmessage = this._handleWorkerMessage.bind(this, color);
+            worker.postMessage({ type: 'start' });
         });
     }
     
     private _handleWorkerMessage(color : number, ev : MessageEvent) {
-        if (color != this.board.turn) return;
-        
         switch (ev.data.type) {
             case 'move':
+                if (color != this.board.turn) return;
                 this.board.movePawn(this.board.getPawn(ev.data.positionBefore), ev.data.positionAfter);
                 this.selectedPawn = null;
                 this.moved();
                 break;
                 
             case 'select':
+                if (color != this.board.turn) return;
                 this.selectedPawn = ev.data.point && this.board.getPawn(ev.data.point) || null;
                 this.callDrawListeners();
+                break;
+
+            case 'ready':
+                this._workersReady++;
+                this._checkWorkers();
                 break;
             
             default:
                 break;
         }
+    }
+
+    private _checkWorkers() {
+        if (this._workersReady != 2 || this.gameState != GameState.RUNNING) return;
+
+        this._workers.forEach((worker, color) => worker.postMessage({
+            type: 'init',
+            color: color,
+            size: this.boardSize,
+            option: this._playerOptions[color]
+        }));
+
+        this._workers[0].postMessage({ type: 'move' });
+        this.callGameRunListeners();
     }
     
     public stop() {
@@ -83,10 +101,9 @@ export class Game {
     public run() {
         this.callInitializeListeners();
         this.callDrawListeners();
-        setTimeout(() => {
-            this.callGameRunListeners();
-            this._workers[0].postMessage({ type: 'move' });
-        }, 2000);
+        this.gameState = GameState.RUNNING;
+
+        this._checkWorkers();
     }
 
     public moved() {

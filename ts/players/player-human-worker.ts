@@ -75,3 +75,7 @@ let movePawn = (point : Point) => {
 
     selectPawn(point);
 }
+
+(postMessage as any)({
+    type: 'ready'
+});

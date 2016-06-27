@@ -6,6 +6,8 @@ let color;
 let board : Board = null;
 let valueFunction : (board : Board) => number;
 let depth : number;
+let averageTime = 0;
+let movesMade = 0;
 
 onmessage = (ev : MessageEvent) => {
     switch (ev.data.type) {
@@ -53,8 +55,14 @@ onmessage = (ev : MessageEvent) => {
 }
 
 let move = () => {
+    let start = Date.now();
+
     let moves = negamax(depth, Number.NEGATIVE_INFINITY, Number.POSITIVE_INFINITY);
     let move = moves[Math.floor(Math.random() * moves.length)];
+
+    movesMade++;
+    averageTime = (averageTime * (movesMade - 1) + Date.now() - start) / movesMade;
+    console.log('MinMax average time: ', averageTime);
 
     (postMessage as any)({
         type: 'move',
@@ -76,22 +84,14 @@ let orderPawns = (pawns: Pawn[]) => {
 }
 
 let negamax = (depth : number, a : number, b : number) => {
+    if (board.checkEnd() !== -1) return [{ value: -9999999 + board.turnNumber, move: null, pawn: null }];
     if (depth === 0) return [{ value: valueFunction(board), move: null, pawn: null }];
     
     let maxMoves = [{ pawn: null, move: null, value: Number.NEGATIVE_INFINITY }];
     orderPawns(board.getPawns(board.turn)).every(pawn => {
         return board.getPossibleMovesOfAPawn(pawn).every(move => {
-            let previousPawn = board.getPawn(move);
-            let previousPosition : Point = JSON.parse(JSON.stringify(pawn.position));
-            let value = 0;
-            
             board.movePawn(pawn, move);
-            
-            if (board.checkEnd() === -1)
-                value = - negamax(depth - 1, -b, -a)[0].value;
-            else
-                value = 9999999 - board.turnNumber;
-                        
+            let value = - negamax(depth - 1, -b, -a)[0].value;
             board.undoMove();
             
             if (value === maxMoves[0].value)
@@ -115,22 +115,14 @@ let _valueFunction1 = (board : Board) => {
     }
     
     let playerColor = board.turn;
-    
     let enemyColor = playerColor ^ 1;
-    let endingPosition = board.checkEnd();
-    
-    if (endingPosition === playerColor) return 9999999 - board.turnNumber;
-    else if (endingPosition === enemyColor) return -9999999 + board.turnNumber;
-    
     let myPawns = board.getPawns(playerColor);
     let enemyPawns = board.getPawns(enemyColor);
-    
     let mySortedDistances = myPawns.map(p => pawnDistance(p)).sort((a, b) => b - a);
     let enemySortedDistances = enemyPawns.map(p => pawnDistance(p)).sort((a, b) => b - a);
     
     let i = 1;
     let myValue = mySortedDistances.reduce((val, a) => { i /= 2; return val + a * i; }) + 3 * myPawns.length;
-    
     i = 1
     let enemyValue = enemySortedDistances.reduce((val, a) => { i /= 2; return val + a * i; }) + 3 * enemyPawns.length;
     
@@ -209,3 +201,7 @@ let _valueFunction4 = (board : Board) => {
     
     return myValue - enemyValue;
 }
+
+(postMessage as any)({
+    type: 'ready'
+});

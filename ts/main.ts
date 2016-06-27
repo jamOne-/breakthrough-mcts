@@ -81,10 +81,10 @@ class Main {
         let white = (<HTMLSelectElement>document.getElementById('player-white')).value;
         let black = (<HTMLSelectElement>document.getElementById('player-black')).value;
         let size = (<HTMLSelectElement>document.getElementById('board-size')).value;
-        let whiteOption = parseInt((<HTMLInputElement>document.getElementById('option-white')).value) ||
-                          parseInt(getOption(white).default);
-        let blackOption = parseInt((<HTMLInputElement>document.getElementById('option-black')).value) ||
-                          parseInt(getOption(black).default);
+        let whiteOption = parseFloat((<HTMLInputElement>document.getElementById('option-white')).value) /*||
+                          parseFloat(getOption(white).default);*/
+        let blackOption = parseFloat((<HTMLInputElement>document.getElementById('option-black')).value) /*||
+                          parseFloat(getOption(black).default);*/
         
         if (Main._game) Main._game.stop();
         Main._game = new Game(parseInt(size), white, black, [whiteOption, blackOption]);
@@ -149,14 +149,17 @@ class Main {
     
     private static _setCanvasOverlay(text : string) {
         this._canvas_overlay.innerHTML = '<h3>' + text + '</h3>';
+        this._canvas_overlay.classList.remove('totally-transparent');
         this._canvas_overlay.classList.remove('hidden');
     }
     
     private static _hideCanvasOverlay() {
         this._canvas_overlay.classList.add('totally-transparent');
         setTimeout(() => {
-            this._canvas_overlay.classList.add('hidden');
-            this._canvas_overlay.classList.remove('totally-transparent');
+            if (this._canvas_overlay.classList.contains('totally-transparent')) {
+                this._canvas_overlay.classList.add('hidden');
+                this._canvas_overlay.classList.remove('totally-transparent');
+            }
         }, 200);
     }
 }

@@ -27,7 +27,8 @@ struct TreeNode {
 };
 
 
-float aggressiveness = 1.0;
+float aggressiveness = 0.99;
+float attack_closest = 0.99;
 int thinking_time = 10000;
 double cp = M_SQRT1_2;
 TreeNode * root = NULL;
@@ -49,7 +50,7 @@ extern "C" {
 	void UCT_search();
 	void move_root(int x1, int y1, int x2, int y2);
 	void set_color(int c) { color = c; };
-	void set_thinking_time(int time) { thinking_time = time; };
+	void set_thinking_time(float time) { thinking_time = time; };
 	void set_board(int size) { board = Board(size); board.init_board(); root = new TreeNode(NULL, &board); };
 	void set_request_time() { request_time = get_milliseconds(); };
 	void stop_working() { working = false; };
@@ -62,6 +63,12 @@ long long get_milliseconds() {
 int main() {
 	srand(time(NULL));
 	init_onmessage();
+
+	EM_ASM(
+		postMessage({
+			type: 'ready'
+		});
+	);
 	
 	return 0;
 }
@@ -71,7 +78,6 @@ void init_onmessage() {
 		onmessage = function(ev) {
 			switch (ev.data.type) {
 				case 'init':
-					console.log('mcts asm.js init');
 					Module.ccall('set_color', null, ['number'], [ev.data.color]);
 					Module.ccall('set_thinking_time', null, ['number'], [ev.data.option]);
 					Module.ccall('set_board', null, ['number'], [ev.data.size]);
@@ -190,9 +196,25 @@ int default_policy(int turn) {
 	std::vector<Move *> * attack_moves = new std::vector<Move *>();
 
 	if (rand() % 100 < aggressiveness * 100) {
-		for (auto move : *moves)
-			if (board.get_pawn(move->point))
-				attack_moves->push_back(move);
+		if (rand() % 100 < attack_closest * 100) {
+			for (auto move : *moves) {
+				Pawn * pawn = board.get_pawn(move->point);
+				if (!pawn) continue;
+
+				if (attack_moves->size() &&
+					board.pawn_distance(pawn) > board.pawn_distance(board.get_pawn(attack_moves->at(0)->point)))
+					attack_moves->clear();
+
+				if (!attack_moves->size() ||
+					board.pawn_distance(pawn) == board.pawn_distance(board.get_pawn(attack_moves->at(0)->point)))
+					attack_moves->push_back(move);
+			}
+		}
+
+		else
+			for (auto move : *moves)
+				if (board.get_pawn(move->point))
+					attack_moves->push_back(move);
 
 		if (attack_moves->size())
 			moves = attack_moves;
@@ -262,7 +284,7 @@ void move_root(int x1, int y1, int x2, int y2) {
 }
 
 void move_best() {
-	std::cout << root->n << "\n";
+	std::cout << "MCTS asm.js games in root: " << root->n << "\n";
 
 	int best = best_child(root, 0);
 	Move * move = board.get_possible_moves_of_pawns()->at(best);
@@ -283,5 +305,5 @@ void move_best() {
 	delete root->parent;
 	root->parent = NULL;
 
-	std::cout << (double)root->q * 100.0 / (double)root->n << "% " << root->q << " " << root->n << "\n";
+	std::cout << "MCTS asm.js current root stats: " << (double)root->q * 100.0 / (double)root->n << "% " << root->q << " " << root->n << "\n";
 }

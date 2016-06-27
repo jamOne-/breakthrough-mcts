@@ -185,7 +185,7 @@ let moveRoot = () => {
 }
 
 let moveBest = () => {
-    console.log(root.n);
+    console.log("MCTS games in root: ", root.n);
     
     let best = bestChild(root, 0);
     let move = root.moves[best];
@@ -193,7 +193,7 @@ let moveBest = () => {
     root = root.children[best];
     root.parent = null;
     
-    console.log((root.q * 100 / root.n).toString() + "%", root.q, root.n);
+    console.log("MCTS current root stats: ", (root.q * 100 / root.n).toString() + "%", root.q, root.n);
     
     requestTime = 0;  
     (postMessage as any)({
@@ -204,3 +204,7 @@ let moveBest = () => {
     
     board.movePawn(move.pawn, move.point);
 }
+
+(postMessage as any)({
+    type: 'ready'
+});

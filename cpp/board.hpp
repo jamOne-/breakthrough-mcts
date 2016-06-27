@@ -36,9 +36,10 @@ class Board {
         Board() {};
         Board(int board_size) : board_size(board_size) {};
         void init_board();
-        int check_end();
         void next_turn();
         void previous_turn();
+        int check_end();
+        int pawn_distance(Pawn * pawn);
         std::vector<Pawn *> * get_pawns(int color);
         std::vector<Move *> * get_possible_moves_of_pawns();
         void move_pawn(Pawn * pawn, Point * point);

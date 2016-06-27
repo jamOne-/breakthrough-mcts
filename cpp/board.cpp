@@ -74,6 +74,13 @@ void Board::previous_turn() {
     turn_number--;
 }
 
+int Board::pawn_distance(Pawn * pawn) {
+    if (pawn->color)
+        return pawn->position->y;
+    
+    return board_size - 1 - pawn->position->y;
+}
+
 std::vector<Pawn *> * Board::get_pawns(int color) {
     return &_pawns[color];
 }
