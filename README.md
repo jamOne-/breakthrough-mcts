@@ -1,7 +1,7 @@
 # breakthrough-mcts
 Bachelor thesis 2016.
 
-Developing agent, which plays in Breakthrough using Monte Carlo Tree Search algorithm, and compare him with MinMax agent.
+Developing agent which plays Breakthrough using Monte Carlo Tree Search algorithm and compare him with MinMax agent.
 
 Project web page: https://dominiks.site/breakthrough/
 
