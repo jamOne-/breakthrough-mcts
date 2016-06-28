@@ -55,6 +55,11 @@
     width: 60%;
 }
 
+#my-photo {
+    max-width: 75%;
+    border-radius: 50%;
+}
+
 #settings-container {
     display: flex;
     flex-direction: column;
@@ -62,6 +67,14 @@
     justify-content: center;
 
     flex-grow: 1;
+}
+
+.flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    width: 100%;
 }
 
 .flex-column {
@@ -83,6 +96,14 @@
 
 .mdl-layout__header-row .mdl-navigation__link:hover {
     color: white;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-justify {
+    text-align: justify;
 }
 
 .transparent-icon-32 {

@@ -1,29 +1,29 @@
 # breakthrough-mcts
-Praca licencjacka 2016.
+Bachelor thesis 2016.
 
-Opracowywanie agenta grającego w grę Breakthrough wykorzystującego algorytm Monte Carlo Tree Search.
+Developing agent, which plays in Breakthrough using Monte Carlo Tree Search algorithm, and compare him with MinMax agent.
 
-Strona projektu: https://dominiks.site/breakthrough/
+Project web page: https://dominiks.site/breakthrough/
 
-### Uruchomienie projektu
+### Running project
 
-Do uruchomienia projektu potrzebny jest kompilator Emscripten oraz Node.js.
+To run this project you will need Node.js and Emscripten compiler.
 
-Będąc w katalogu projektu instalujemy zależności projektu poleceniem:
+Being into project directory, install poject dependences with command:
 ```sh
 $ npm install
 ```
 
-Włączamy emscripten command prompt, nawigujemy do katalogu projektu i wpisujemy:
+Next, open emscripten command prompt, navigate to project directory and write:
 ```sh
 $ npm run build
-# ewentualnie:
-#   - npm run em++ (sama kompilacja kodu c++)
-#   - webpack      (transpilcja kodu TypeScript)
+# or:
+#   - npm run em++ (just c++ compilation)
+#   - webpack      (just TypeScript transpilation)
 ```
 
-Dodatkowo aplikację do poprawnego działania trzeba jakoś serwować.
-Na przykład dzięki lite-server (znajdującego się w zależnościach):
+Additionally, application needs to be served somehow (because of Web Workers).
+For example, using lite-server (found in dependencies):
 ```sh
 $ lite-server
 ``` 
