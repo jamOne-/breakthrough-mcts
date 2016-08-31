@@ -17,7 +17,8 @@ class TreeNode {
     }
 }
 
-let aggressiveness = 1.0;
+let aggressiveness = 0.99;
+let attack_closest = 0.99;
 let thinkingTime = 10000;
 let cp = Math.SQRT1_2;
 let root : TreeNode = null;
@@ -130,17 +131,32 @@ let bestChild = (v : TreeNode, c : number) : string => {
 }
 
 let defaultPolicy = (turn : number) : number => {
-    return doSomeRandomMoves(turn);
-}
-
-let doSomeRandomMoves = (turn : number) : number => {
     let winner = board.checkEnd();
     if (winner != -1) return winner ^ turn;
     
     let moves = board.getPossibleMovesOfPawns(board.turn);
     
     if (Math.random() < aggressiveness) {
-        let attackMoves = moves.filter(move => !!board.getPawn(move.point));
+        let attackMoves : {pawn : Pawn; point : Point}[] = [];
+        
+        if (Math.random() < attack_closest) {
+            moves.forEach(move => {
+                let pawn = board.getPawn(move.point);
+                if (!pawn) return;
+
+                if (attackMoves.length &&
+                    board.pawnDistance(pawn) > board.pawnDistance(board.getPawn(attackMoves[0].point)))
+                    attackMoves = [];
+
+                if (!attackMoves.length ||
+                    board.pawnDistance(pawn) == board.pawnDistance(board.getPawn(attackMoves[0].point)))
+                    attackMoves.push(move);
+            });
+        }
+
+        else
+            attackMoves = moves.filter(move => !!board.getPawn(move.point));
+        
         if (attackMoves.length)
             moves = attackMoves;
     }
@@ -148,11 +164,11 @@ let doSomeRandomMoves = (turn : number) : number => {
     let move = moves[~~(Math.random() * moves.length)];
     board.movePawn(move.pawn, move.point);
     
-    let result = doSomeRandomMoves(turn);
+    let result = defaultPolicy(turn);
     
     board.undoMove();
     
-    return result;    
+    return result; 
 }
 
 let backUp = (v : TreeNode, reward : number) : void => {

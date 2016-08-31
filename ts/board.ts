@@ -116,6 +116,13 @@ export class Board {
     public getPawn(position : Point) {
         return this.board[position.y][position.x];
     }
+
+    public pawnDistance(pawn : Pawn) {
+        if (pawn.color)
+            return pawn.position.y;
+        
+        return this.boardSize - 1 - pawn.position.y;
+    }
 }
 
 interface UndoHistory {
