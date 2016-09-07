@@ -26,7 +26,6 @@ struct TreeNode {
 	}
 };
 
-
 float aggressiveness = 0.99;
 float attack_closest = 0.99;
 int thinking_time = 10000;
@@ -191,6 +190,10 @@ int best_child(TreeNode * v, double c) {
 int default_policy(int turn) {
 	int winner = board.check_end();
 	if (winner != -1) return winner ^ turn;
+
+	for (auto pawn : *(board.get_pawns(board.turn)))
+		if (!pawn->dead && board.pawn_distance(pawn) == board.board_size - 2)
+			return board.turn ^ turn;
 
 	std::vector<Move *> * moves = board.get_possible_moves_of_pawns();
 	std::vector<Move *> * attack_moves = new std::vector<Move *>();

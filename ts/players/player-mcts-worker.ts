@@ -133,6 +133,10 @@ let bestChild = (v : TreeNode, c : number) : string => {
 let defaultPolicy = (turn : number) : number => {
     let winner = board.checkEnd();
     if (winner != -1) return winner ^ turn;
+
+    for (let pawn of board.getPawns(board.turn))
+        if (board.pawnDistance(pawn) == board.boardSize - 2)
+            return board.turn ^ turn;
     
     let moves = board.getPossibleMovesOfPawns(board.turn);
     
